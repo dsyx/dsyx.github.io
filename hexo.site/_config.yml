@@ -106,3 +106,7 @@ deploy:
   type: git
   repo: git@github.com:dsyx/dsyx.github.io.git
   branch: hexo.site
+
+# hexo-renderer-marked
+marked:
+  modifyAnchors: 1
