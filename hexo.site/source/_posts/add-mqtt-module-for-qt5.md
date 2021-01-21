@@ -1,8 +1,7 @@
 ---
 title: '为 Qt5 添加 MQTT 模块'
 date: 2021-01-13 19:41:00
-categories: 'Qt'
-tags: ['MQTT', 'Qt']
+tags: ['MQTT', 'Qt5']
 ---
 
 [MQTT](http://mqtt.org/) 是一种利用发布/订阅范式的机对机（M2M）协议，目前在物联网应用中十分流行。
