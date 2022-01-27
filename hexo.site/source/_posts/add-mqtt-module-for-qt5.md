@@ -1,6 +1,7 @@
 ---
 title: '为 Qt5 添加 MQTT 模块'
 date: 2021-01-13 19:41:00
+category: Qt
 tags: ['MQTT', 'Qt5']
 ---
 

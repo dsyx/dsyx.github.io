@@ -1,7 +1,8 @@
 ---
 title: '解决 Qt5 显示乱码问题'
 date: 2021-05-09 16:54:48
-tags: ['MSVC', 'Qt5', 'Windows']
+category: Qt
+tags: ['Qt5', 'MSVC', 'Windows']
 ---
 
 对于在 Windows 上进行 Qt 开发的小伙伴来说，乱码可能是一个较为头疼的问题。

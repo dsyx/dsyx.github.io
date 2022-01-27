@@ -1,7 +1,8 @@
 ---
 title: 'cannot find -lGL'
 date: 2021-03-25 21:49:05
-tags: ['ld', 'Qt', 'Ubuntu']
+category: Qt
+tags: ['ld', 'Qt5', 'Ubuntu']
 ---
 
 在 Ubuntu 18.04 LTS 上编译 Qt 库时发生了错误，提示如下：

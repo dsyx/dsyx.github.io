@@ -1,6 +1,7 @@
 ---
 title: 'CMake 快速入坑'
 date: 2020-12-30 19:05:49
+category: CMake
 tags: 'CMake'
 ---
 
