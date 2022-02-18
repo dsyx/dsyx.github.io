@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Kernel Objects'
 date: 2022-02-07 10:40:27
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 # 什么是内核对象？

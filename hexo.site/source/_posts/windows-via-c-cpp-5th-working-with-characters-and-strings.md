@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Working with Characters and Strings'
 date: 2022-01-28 14:01:18
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 在 Windows Vista 中，每个 Unicode 字符都使用 UTF-16（Unicode Transformation Format）进行编码。UTF-16 将每个字符编码为 16 位，当 16 位不足以表示所有字符时，其将使用代理（surrogate），代理是一种使用 32 位来表示单个字符的方法。

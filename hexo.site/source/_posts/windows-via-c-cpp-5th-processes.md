@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Processes'
 date: 2022-02-09 14:46:03
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 进程（Process）通常被定义为正在运行的程序实例，由两部分组成：

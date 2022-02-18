@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Thread Basics'
 date: 2022-02-14 16:30:44
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 线程（Thread）描述了进程（Process）中的执行路径，由两部分组成：

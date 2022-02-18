@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities'
 date: 2022-02-17 14:42:49
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 抢占式操作系统必须使用某种算法来确定线程应该何时调度以及运行多长时间。每个线程都有一个在线程内核对象中维护的上下文结构。此上下文结构反映线程上次执行时线程的 CPU 寄存器的状态。每隔 20 ms 左右，Windows 会查看当前存在的所有线程内核对象，选择一个可调度的线程内核对象，并使用上次保存在线程上下文中的值加载 CPU 的寄存器。此操作称为 *上下文切换（Context Switch）* 。

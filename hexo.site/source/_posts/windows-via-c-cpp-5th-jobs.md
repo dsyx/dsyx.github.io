@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Jobs'
 date: 2022-02-14 09:24:02
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 Microsoft Windows 提供了[作业内核对象（Job Kernel Object）](https://docs.microsoft.com/en-us/windows/win32/procthread/job-objects)，允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。

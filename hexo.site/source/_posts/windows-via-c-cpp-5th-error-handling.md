@@ -2,7 +2,7 @@
 title: 'Windows via C/C++, 5th Edition - Error Handling'
 date: 2022-01-28 10:19:37
 category: 'My Notes'
-tags: ['Windows via C/C++', 'Windows', 'C/C++']
+tags: ['Windows via C/C++', 'Windows']
 ---
 
 调用 Windows 函数时，它会检查传参的合法性然后执行任务。如果传参非法或执行失败，那么系统将返回一个值以指明原因。下表列出大多数 Windows 函数的返回值的数据类型：
