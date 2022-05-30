@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <link rel="icon" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaoxing Shan">
+  <meta name="keywords" content="Yaoxing Shan,dsyx">
+  
+    <meta name="description" content="进程（Process）通常被定义为正在运行的程序实例，由两部分组成：  一个被操作系统用来管理进程的内核对象。这个内核对象也是系统用来存放关于进程的统计信息的地方。 一个包含所有可执行文件（executable）或 DLL（动态链接库，Dynamic-Link Library）模块的代码和数据的地址空间。它还包含了动态内存分配，如线程栈和堆的分配。  进程是惰性的。对于要完成任何事情的进程，它必须">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - Processes">
+<meta property="og:url" content="https://dsyx.github.io/2022/02/09/windows-via-c-cpp-5th-processes/index.html">
+<meta property="og:site_name" content="Yaoxing Shan">
+<meta property="og:description" content="进程（Process）通常被定义为正在运行的程序实例，由两部分组成：  一个被操作系统用来管理进程的内核对象。这个内核对象也是系统用来存放关于进程的统计信息的地方。 一个包含所有可执行文件（executable）或 DLL（动态链接库，Dynamic-Link Library）模块的代码和数据的地址空间。它还包含了动态内存分配，如线程栈和堆的分配。  进程是惰性的。对于要完成任何事情的进程，它必须">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-09T06:46:03.000Z">
+<meta property="article:modified_time" content="2022-05-25T06:08:03.636Z">
+<meta property="article:author" content="Yaoxing Shan">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Windows via C/C++, 5th Edition - Processes - Yaoxing Shan</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="/css/fluid_custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaoxing Shan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Processes">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-09 14:46" pubdate>
+        2022/02/09
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      83 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows via C/C++, 5th Edition - Processes</h1>
+            
+            <div class="markdown-body">
+              <p>进程（Process）通常被定义为正在运行的程序实例，由两部分组成：</p>
+<ul>
+<li>一个被操作系统用来管理进程的内核对象。这个内核对象也是系统用来存放关于进程的统计信息的地方。</li>
+<li>一个包含所有可执行文件（executable）或 DLL（动态链接库，Dynamic-Link Library）模块的代码和数据的地址空间。它还包含了动态内存分配，如线程栈和堆的分配。</li>
+</ul>
+<p>进程是惰性的。对于要完成任何事情的进程，它必须具有在其上下文（context）中运行的线程（thread），线程负责执行进程地址空间中的代码。单个进程可能包含多个线程，这些线程在进程的地址空间中“同时地（simultaneously）”执行代码。为此，每个线程都有自己的一组 CPU 寄存器（register）和栈（stack）。每个进程至少有一个线程。创建进程时，系统会自动创建其第一个线程，称为<em>主线程（primary thread）</em>。此线程可以创建其他线程，而这些线程又可以创建更多线程。如果在进程的地址空间中没有执行代码的线程，则该进程没有理由继续存在，并且系统将自动销毁进程及其地址空间。</p>
+<p>操作系统会为每个线程安排一些 CPU 时间，通过轮询（round-robin）方式为线程提供时间片（称为<em>quantum</em>），让人产生所有线程同时运行的错觉。若机器具有多个 CPU，则操作系统用于在 CPU 上对线程进行负载平衡的算法会很复杂。Microsoft Windows 可以同时在每个 CPU 上安排不同的线程，以便多个线程真正地同时运行。Windows 内核负责处理此类系统上线程的所有管理和调度。</p>
+<h1 id="windows-应用程序的起点"><a href="#windows-应用程序的起点" class="headerlink" title="Windows 应用程序的起点"></a>Windows 应用程序的起点</h1><p>Windows 支持两种应用类型：GUI（Graphical User Interface）应用和 CUI（Console User Interface）应用。使用 Microsoft Visual Studio 创建应用工程时，集成环境会设置各种链接器开关，以便链接器在生成的可执行文件中嵌入正确类型的子系统。GUI 应用的链接器开关是 <code>/SUBSYSTEM:WINDOWS</code>；CUI 应用的链接器开关是 <code>/SUBSYSTEM:CONSOLE</code>。当用户运行应用程序时，操作系统的加载器会查看可执行映像的标头（header）并获取子系统值。</p>
+<p>Windows 应用程序必须具有一个在应用程序开始运行时被调用的入口点函数，具体取决于应用的类型和是否使用 Unicode：</p>
+<blockquote>
+<p>注：操作系统实际上并不调用您编写的入口点函数。相反，它调用由 C/C++ 运行时实现的 C/C++ 运行时启动函数，并在链接时设置 <code>-entry:</code> 命令行选项。</p>
+</blockquote>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> WINAPI <span class="token function">_tWinMain</span><span class="token punctuation">(</span>
+    HINSTANCE hInstanceExe<span class="token punctuation">,</span>
+    HINSTANCE<span class="token punctuation">,</span>
+    PTSTR pszCmdLine<span class="token punctuation">,</span>
+    <span class="token keyword">int</span> nCmdShow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">_tmain</span><span class="token punctuation">(</span>
+    <span class="token keyword">int</span> argc<span class="token punctuation">,</span>
+    TCHAR <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    TCHAR <span class="token operator">*</span>envp<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<table>
+<thead>
+<tr>
+<th align="left">Application Type</th>
+<th align="left">Entry Point</th>
+<th align="left">Startup Function Embedded in Your Executable</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">GUI application that wants ANSI characters and strings</td>
+<td align="left">_tWinMain (WinMain)</td>
+<td align="left">WinMainCRTStartup</td>
+</tr>
+<tr>
+<td align="left">GUI application that wants Unicode characters and strings</td>
+<td align="left">_tWinMain (wWinMain)</td>
+<td align="left">wWinMainCRTStartup</td>
+</tr>
+<tr>
+<td align="left">CUI application that wants ANSI characters and strings</td>
+<td align="left">_tmain (Main)</td>
+<td align="left">mainCRTStartup</td>
+</tr>
+<tr>
+<td align="left">CUI application that wants Unicode characters and strings</td>
+<td align="left">_tmain (Wmain)</td>
+<td align="left">wmainCRTStartup</td>
+</tr>
+</tbody></table>
+<p>链接器负责在链接可执行文件时选择正确的 C/C++ 运行时启动函数。如果指定了 <code>/SUBSYSTEM:WINDOWS</code> 链接器开关，则链接器希望找到 <code>WinMain</code> 或 <code>wWinMain</code> 函数。如果这两个函数都不存在，那么链接器将返回“未解析的外部符号（unresolved external symbol）”错误；否则，它会调用 <code>WinMainCRTStartup</code> 或 <code>wWinMainCRTStartup</code> 函数。同样，如果指定了 <code>/SUBSYSTEM:CONSOLE</code> 链接器开关，则链接器希望找到 <code>main</code> 或 <code>wmain</code> 函数，并调用 <code>mainCRTStartup</code> 或 <code>wmainCRTStartup</code> 函数。</p>
+<blockquote>
+<p>注：如果未指定 <code>/SUBSYSTEM</code> 链接器开关，那么链接器会检查代码中是否存在四个函数（<code>WinMain</code>、<code>wWinMain</code>、<code>main</code>、<code>wmain</code>）之一，并以此来推断应该将哪个子系统及 C/C++ 启动函数嵌入到可执行文件中。</p>
+</blockquote>
+<p>所有 C/C++ 运行时启动函数基本上都执行相同的操作，不同之处在于它们是处理 ANSI 还是 Unicode 字符串，以及在初始化 C 运行时库后调用哪个入口点函数：</p>
+<ul>
+<li>检索指向新进程的完整命令行的指针。</li>
+<li>检索指向新进程环境变量的指针。</li>
+<li>初始化 C/C++ 运行时的全局变量。</li>
+<li>初始化 C 运行时内存分配函数（<code>malloc</code> 和 <code>calloc</code>）和其他低级输入/输出例程使用的堆。</li>
+<li>调用所有全局的和静态的 C++ 类对象的构造函数。</li>
+</ul>
+<p>在初始化这些之后，C/C++ 启动函数会调用应用的入口点函数。如果你编写了一个 <code>_tWinMain</code> 函数并且启用了 <code>_UNICODE</code>，则调用如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">GetStartupInfo</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>StartupInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> nMainRetVal <span class="token operator">=</span> <span class="token function">wWinMain</span><span class="token punctuation">(</span><span class="token punctuation">(</span>HINSTANCE<span class="token punctuation">)</span><span class="token operator">&amp;</span>_ImageBase<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> pszCommandLineUnicode<span class="token punctuation">,</span>
+    <span class="token punctuation">(</span>StartupInfo<span class="token punctuation">.</span>dwFlags <span class="token operator">&amp;</span> STARTF_USESHOWWINDOW<span class="token punctuation">)</span>
+        <span class="token operator">?</span> StartupInfo<span class="token punctuation">.</span>wShowWindow <span class="token operator">:</span> SW_SHOWDEFAULT<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<blockquote>
+<p>注：<code>_ImageBase</code> 是链接器定义的伪变量，它展示可执行文件映射到应用程序内存的位置。</p>
+</blockquote>
+<p>如果你编写了一个 <code>_tmain</code> 函数并且启用了 <code>_UNICODE</code>，则调用如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> nMainRetVal <span class="token operator">=</span> <span class="token function">wmain</span><span class="token punctuation">(</span>argc<span class="token punctuation">,</span> argv<span class="token punctuation">,</span> envp<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>当入口点函数返回时，启动函数会使用返回值 <code>nMainRetVal</code> 调用 C 运行时 <code>exit</code> 函数，<code>exit</code> 函数会执行如下操作：</p>
+<ul>
+<li>调用任何通过调用 <code>_onexit</code> 函数注册的函数。</li>
+<li>调用所有全局的和静态的 C++ 类对象的析构函数。</li>
+<li>在 <code>DEBUG</code> 构建中，如果已设置 <code>_CRTDBG_LEAK_CHECK_DF</code> 标志，则 C/C++ 运行时内存管理中的泄漏将通过调用 <code>_CrtDumpMemoryLeaks</code> 函数列出。</li>
+<li>调用操作系统的 <code>ExitProcess</code> 函数，并将 <code>nMainRetVal</code> 传递给它。这会导致操作系统终止进程并设置其退出码。</li>
+</ul>
+<h2 id="进程实例句柄"><a href="#进程实例句柄" class="headerlink" title="进程实例句柄"></a>进程实例句柄</h2><p>加载到进程地址空间中的每个可执行文件或 DLL 文件都分配有一个唯一的实例句柄。可执行文件的实例将作为 <code>(w)WinMain</code> 的第一个参数 <code>hInstanceExe</code>。加载资源的调用通常需要句柄的值，如要从可执行文件的映像中加载图标资源，则需要调用以下函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HICON <span class="token function">LoadIcon</span><span class="token punctuation">(</span>
+    HINSTANCE hInstance<span class="token punctuation">,</span>
+    PCTSTR pszIcon<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div>
+
+<p>某些函数需要 <code>HMODULE</code> 类型的参数，如 <code>GetModuleFileName</code> 函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD <span class="token function">GetModuleFileName</span><span class="token punctuation">(</span>
+    HMODULE hInstModule<span class="token punctuation">,</span>
+    PTSTR pszPath<span class="token punctuation">,</span>
+    DWORD cchPath<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<blockquote>
+<p>注：事实上，<code>HMODULE</code> 和 <code>HINSTANCE</code> 是一样的东西。如果函数的文档指示需要 <code>HMODULE</code>，那么可以传递一个 <code>HINSTANCE</code>，反之亦然。定义出两个数据类型是因为在 16 位 Windows 中，它们所标识的东西是不同的。</p>
+</blockquote>
+<p><code>(w)WinMain</code> 的 <code>hInstanceExe</code> 参数的实际值是系统将可执行文件的映像加载到进程地址空间中的内存基址。加载可执行文件映像的基址由链接器确定，可以使用 Microsoft 链接器的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/build/reference/base-base-address"><code>/BASE:address</code></a> 链接器开关更改应用程序加载到的基址。</p>
+<p>可以使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew"><code>GetModuleHandle</code></a> 函数来检索进程已加载的指定模块。</p>
+<h2 id="进程的前一个实例句柄"><a href="#进程的前一个实例句柄" class="headerlink" title="进程的前一个实例句柄"></a>进程的前一个实例句柄</h2><p>C/C++ 运行时启动代码始终将 <code>NULL</code> 传递给 <code>(w)WinMain</code> 的 <code>hPrevInstance</code> 参数。此参数在 16 位 Windows 中使用，保留此参数仅仅是为了简化 16 位 Windows 应用程序的移植。请切勿在代码中引用此参数。</p>
+<h2 id="进程的命令行"><a href="#进程的命令行" class="headerlink" title="进程的命令行"></a>进程的命令行</h2><p>创建新进程时，将传递该进程的命令行。命令行至少包含用于创建新进程的可执行文件的名称（第一个标记）。当 C 运行时的启动代码开始执行 GUI 应用程序时，它会通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew"><code>GetCommandLine</code></a> Windows 函数来检索进程的完整命令行，它会跳过可执行文件的名称，并将指向命令行其余部分的指针传递给 <code>WinMain</code> 的 <code>pszCmdLine</code> 参数。</p>
+<p><code>ShellAPI.h</code> 中声明了 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw"><code>CommandLineToArgvW</code></a> 函数，可用于辅助命令行标记的提取。</p>
+<h2 id="进程的环境变量"><a href="#进程的环境变量" class="headerlink" title="进程的环境变量"></a>进程的环境变量</h2><p>每个进程都有一个与之关联的环境块。环境块是在进程的地址空间内分配的内存块，其中包含一组具有以下外观的字符串：</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">&#x3D;::&#x3D;::\ ...
+VarName1&#x3D;VarValue1\0
+VarName2&#x3D;VarValue2\0
+VarName3&#x3D;VarValue3\0 ...
+VarNameX&#x3D;VarValueX\0
+\0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>每个字符串的第一部分是环境变量的名称，后跟一个等号，等号后是要分配给变量的值。</p>
+<blockquote>
+<p>注：除了第一个 <code>=::=::\ ...</code> 字符串之外，块中的其他一些字符串可能以 <code>=</code> 字符开头。在这种情况下，这些字符串不会用作环境变量。</p>
+</blockquote>
+<p>有两种访问环境块的方法。第一种方法是通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstrings"><code>GetEnvironmentStrings</code></a> 函数来检索完整的环境块。第二种方法是通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-language/main-function-and-program-execution"><code>main</code></a> 入口点收到的 <code>TCHAR* env[]</code> 参数（仅适用于 CUI 应用程序）。</p>
+<p>当用户登录到 Windows 时，系统将创建 shell 进程，并将一组环境字符串与其关联。系统通过检查注册表（registry）中的两个键（key）来获取环境字符串的初始集。第一个键包含适用于系统的所有环境变量的列表：<code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment</code>；第二个键包含适用于当前登录用户的所有环境变量的列表：<code>HKEY_CURRENT_USER\Environment</code>。用户可以在 <strong>控制面板（Control Panel） &gt; 系统（System） &gt; 高级系统设置（Advanced System Settings） &gt; 环境变量（Environment Variables）</strong> 中维护这些环境变量。</p>
+<blockquote>
+<p>注：只有具有管理员权限的用户才能更改 <strong>系统变量（System Variables）</strong> 列表中包含的变量。</p>
+</blockquote>
+<p>应用程序可以使用各种注册表函数来修改这些注册表项。但是，要使更改对所有应用程序生效，用户必须注销，然后重新登录。某些应用程序（如资源管理器、任务管理器和控制面板）可以在其主窗口收到 <code>WM_SETTINGCHANGE</code> 消息时使用新的注册表项更新其环境块。如果应用程序更新了注册表项，并希望让感兴趣的应用程序更新其环境块，则可以进行以下调用：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">SendMessage</span><span class="token punctuation">(</span>HWND_BROADCAST<span class="token punctuation">,</span> WM_SETTINGCHANGE<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>LPARAM<span class="token punctuation">)</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Environment"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>通常，子进程会继承父进程的环境变量。父进程可以在创建子进程时决定子进程的环境变量。由于子进程继承的环境变量是拷贝所得而不是引用所得的，所以后续父、子进程对环境变量的修改不会相互影响。</p>
+<p>如果要使用环境变量，则应用程序可以利用一些函数：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getenvironmentvariable"><code>GetEnvironmentVariable</code></a> 函数用于确定环境变量的存在和值。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw"><code>ExpandEnvironmentStrings</code></a> 函数用于解析包含可替换字符串的内容，由一对百分号包裹的部分指示为可替换字符串，如 <code>%USERPROFILE%\Documents</code>，<code>%USERPROFILE%</code> 将替换为环境变量 <code>USERPROFILE</code> 的值。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-setenvironmentvariablew"><code>SetEnvironmentVariable</code></a> 函数用于添加、删除或修改环境变量的值。</li>
+</ul>
+<h2 id="进程的亲和性"><a href="#进程的亲和性" class="headerlink" title="进程的亲和性"></a>进程的亲和性</h2><p>通常，进程中的线程可以在主机中的任何 CPU 上执行。但是，也可以强制进程的线程在可用 CPU 的子集上运行，这称为处理器亲和性（processor affinity）。子进程会继承其父进程的亲和性。</p>
+<h2 id="进程的错误模式"><a href="#进程的错误模式" class="headerlink" title="进程的错误模式"></a>进程的错误模式</h2><p>每个进程有一组相关联的标志，这些标志告诉系统进程应如何响应严重错误，包括磁盘介质故障、未处理的异常、文件查找故障和数据未对齐等。进程可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-seterrormode"><code>SetErrorMode</code></a> 函数来告诉系统如何处理这些每个错误。</p>
+<p>默认情况下，子进程继承其父进程的错误模式标志。即如果进程打开了 <code>SEM_NOGPFAULTERRORBOX</code> 标志，然后产生了一个子进程，那么子进程也将打开此标志。但是，子进程不会收到有关此问题的通知，并且子进程可能尚未编写如何处理 GP 故障。如果子进程的某个线程发生了 GP 故障，则子进程可能会在不通知用户的情况下终止。父进程可以通过在调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 时指定 <code>CREATE_DEFAULT_ERROR_MODE</code> 标志来防止子进程继承其错误模式。</p>
+<h2 id="进程的当前驱动器和目录"><a href="#进程的当前驱动器和目录" class="headerlink" title="进程的当前驱动器和目录"></a>进程的当前驱动器和目录</h2><p>系统在内部跟踪进程的当前驱动器（Drive）和目录（Directory）。这些信息是基于每个进程进行维护的，因此在进程中更改当前驱动器或目录会更改进程中所有线程的此信息。当进程调用需要路径的函数时，若没有提供完整的路径，则会基于当前驱动器和目录进行查找。</p>
+<p>可以通过调用以下两个函数来获取和设置进程的当前驱动器和目录：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory"><code>GetCurrentDirectory</code></a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory"><code>SetCurrentDirectory</code></a></li>
+</ul>
+<h3 id="进程的当前目录"><a href="#进程的当前目录" class="headerlink" title="进程的当前目录"></a>进程的当前目录</h3><p>系统会跟踪进程的当前驱动器和目录，但不会跟踪每个驱动器的当前目录。但是，有一些操作系统支持处理多个驱动器的当前目录。此支持通过进程的环境字符串提供。例如，一个进程可以有两个环境变量，如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">&#x3D;C:&#x3D;C:\Utility\Bin
+&#x3D;D:&#x3D;D:\Program Files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<p>这些变量指示进程的驱动器 C 的当前目录是 <code>\Utility\Bin</code>，而其驱动器 D 的当前目录是 <code>\Program Files</code>。</p>
+<p>如果调用一个函数，并传递一个驱动器限定名称（如：<code>D:readme.txt</code>）以指示驱动器不是当前驱动器，那么系统将在进程的环境块中查找与指定驱动器号关联的变量。如果变量存在，则系统将使用变量的值作为当前目录；如果变量不存在，则系统会假定当前目录为驱动器的根目录。</p>
+<blockquote>
+<p>注：可以使用 C 运行时函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir"><code>_chdir</code></a> 替代 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory"><code>SetCurrentDirectory</code></a> 来改变当前目录。与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory"><code>SetCurrentDirectory</code></a> 不同，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/chdir-wchdir"><code>_chdir</code></a> 还会添加或修改环境变量，因此会保留不同驱动器的当前目录。</p>
+</blockquote>
+<p>可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfullpathnamew"><code>GetFullPathName</code></a> 来获取其当前目录，如获取驱动器 C 的当前目录：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">TCHAR szCurDir<span class="token punctuation">[</span>MAX_PATH<span class="token punctuation">]</span><span class="token punctuation">;</span>
+DWORD cchLength <span class="token operator">=</span> <span class="token function">GetFullPathName</span><span class="token punctuation">(</span><span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"C:"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> MAX_PATH<span class="token punctuation">,</span> szCurDir<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<h2 id="系统版本"><a href="#系统版本" class="headerlink" title="系统版本"></a>系统版本</h2><p>有时候应用程序需要确定用户正在运行哪个版本的 Windows，可以使用如下函数获取相关信息：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getversion"><code>GetVersion</code></a>，最开始是为 16 位 Windows 设计的。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getversionexw"><code>GetVersionEx</code></a>，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getversion"><code>GetVersion</code></a> 的增强版。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow"><code>VerifyVersionInfo</code></a>，从 Windows Vista 开始提供的。</li>
+</ul>
+<blockquote>
+<p>注：最新的方法应该查看 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/sysinfo/windows-system-information">Microsoft Documentation - Windows/Apps/Win32/Desktop Technologies/System Services/Windows System Information</a>。</p>
+</blockquote>
+<h1 id="创建进程"><a href="#创建进程" class="headerlink" title="创建进程"></a>创建进程</h1><p>使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 函数可以创建进程：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">CreateProcess</span><span class="token punctuation">(</span>
+    PCTSTR pszApplicationName<span class="token punctuation">,</span>
+    PTSTR pszCommandLine<span class="token punctuation">,</span>
+    PSECURITY_ATTRIBUTES psaProcess<span class="token punctuation">,</span>
+    PSECURITY_ATTRIBUTES psaThread<span class="token punctuation">,</span>
+    BOOL bInheritHandles<span class="token punctuation">,</span>
+    DWORD fdwCreate<span class="token punctuation">,</span>
+    PVOID pvEnvironment<span class="token punctuation">,</span>
+    PCTSTR pszCurDir<span class="token punctuation">,</span>
+    PSTARTUPINFO psiStartInfo<span class="token punctuation">,</span>
+    PPROCESS_INFORMATION ppiProcInfo<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 函数时，系统会创建一个进程内核对象（Process Kernel Object），并将其使用计数初始化为 1。进程内核对象不是进程本身，而是操作系统用于管理进程的小型数据结构。系统会为新进程创建一个虚拟地址空间，并将可执行文件的代码和数据以及任何所需的 DLL 加载到进程的地址空间中。</p>
+<p>然后，系统会为新进程的主线程创建一个线程内核对象（Thread Kernel Object），并将其使用计数初始化为 1。与进程内核对象一样，线程内核对象是操作系统用于管理线程的小型数据结构。主线程会从执行 C/C++ 运行时启动代码开始。如果系统成功地创建新进程和主线程，则 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 将返回 <code>TRUE</code>。</p>
+<blockquote>
+<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 会在进程完全初始化之前返回 <code>TRUE</code>。这意味着操作系统加载器尚未尝试查找所有必需的 DLL。如果找不到 DLL 或无法正确初始化，则进程将终止。由于 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 返回 <code>TRUE</code>，因此父进程不会知道任何初始化的问题。</p>
+</blockquote>
+<h1 id="终止进程"><a href="#终止进程" class="headerlink" title="终止进程"></a>终止进程</h1><p>进程可以通过四种方式终止：</p>
+<ul>
+<li>从主线程的入口点函数返回。（强烈建议这样做）</li>
+<li>进程中的一个线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 函数。（避免使用此方法）</li>
+<li>另一个进程中的线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a> 函数。（避免使用此方法）</li>
+<li>进程中的所有线程自行终止。（很少会发生）</li>
+</ul>
+<p>当一个进程终止时，以下动作会被执行：</p>
+<ol>
+<li>进程中任何剩余的线程会被终止。</li>
+<li>释放进程分配的所有 User 和 GDI 对象，并关闭所有内核对象。</li>
+<li>进程的退出码从 <code>STILL_ACTIVE</code> 更改为传递给 <code>ExitProcess</code> 或 <code>TerminateProcess</code> 的退出码。</li>
+<li>进程内核对象的状态变为已示意（signaled）。</li>
+<li>进程内核对象的使用计数递减 1。</li>
+</ol>
+<blockquote>
+<p>注：进程终止后，其相关的进程内核对象不一定会被销毁，因为可能有其它进程正在使用它。如 A 进程持有已打开的 B 进程相关的进程内核对象句柄，A 进程可以使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess"><code>GetExitCodeProcess</code></a> 函数来获取 B 进程的终止状态，若 B 未终止，则通过输出参数 <code>pdwExitCode</code> 返回 <code>STILL_ACTIVE</code>；否则返回 B 的退出码。</p>
+</blockquote>
+<h2 id="从主线程的入口点函数返回"><a href="#从主线程的入口点函数返回" class="headerlink" title="从主线程的入口点函数返回"></a>从主线程的入口点函数返回</h2><p>应将应用程序设计为仅在从主线程的入口点函数返回时终止，这是保证正确清理所有主线程资源的唯一方法。</p>
+<p>从主线程的入口点函数返回可确保以下内容：</p>
+<ul>
+<li>此线程创建的任何 C++ 对象都将使用其析构函数正确销毁。</li>
+<li>系统将正确释放线程栈使用的内存。</li>
+<li>系统会将进程的退出码（保存在进程内核对象中）设置为入口点函数的返回值。</li>
+<li>系统将递减进程内核对象的使用计数。</li>
+</ul>
+<h2 id="进程中的一个线程调用-exitprocess-函数"><a href="#进程中的一个线程调用-exitprocess-函数" class="headerlink" title="进程中的一个线程调用 ExitProcess 函数"></a>进程中的一个线程调用 ExitProcess 函数</h2><p>当进程中的一个线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 时，进程将终止，操作系统保证该进程的所有进程或线程的系统资源会得到很好的清理。</p>
+<p>然而显式地调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 可能会导致 C/C++ 运行时无法正确地清理，如下代码所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;windows.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">CSomeObj</span> <span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token function">CSomeObj</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Constructor\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+    <span class="token operator">~</span><span class="token function">CSomeObj</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Destructor\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+CSomeObj g_GlobalObj<span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">main</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    CSomeObj LocalObj<span class="token punctuation">;</span>
+    <span class="token function">ExitProcess</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// This shouldn't be here</span>
+
+    <span class="token comment">// At the end of this function, the compiler automatically added</span>
+    <span class="token comment">// the code necessary to call LocalObj's destructor.</span>
+    <span class="token comment">// ExitProcess prevents it from executing.</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>执行上述代码只会看到：</p>
+<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">Constructor
+Constructor<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<p>C++ 对象未被正确销毁！这是因为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 会强制进程马上终止，导致 C/C++ 运行时没有机会进行清理。</p>
+<h2 id="另一个进程中的线程调用-terminateprocess-函数"><a href="#另一个进程中的线程调用-terminateprocess-函数" class="headerlink" title="另一个进程中的线程调用 TerminateProcess 函数"></a>另一个进程中的线程调用 TerminateProcess 函数</h2><p>与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 相同，调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a> 也会终止进程。不同的是，任何线程都可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a> 来终止另一个进程或自身的进程。</p>
+<p>仅当无法使用其他方法强制进程退出时，才应使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a>。被终止的进程不会收到关于它正在终止的通知（这意味着应用程序可能无法正确地进行清理），也无法防止自身被终止（正常安全机制除外）。例如，进程可能无法将其内存中包含的数据刷写到磁盘，但其使用的系统资源（如打开的文件对象）会被完全地清理。</p>
+<blockquote>
+<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a> 函数是异步的。因此，如果需要确定进程已终止，那么可能需要调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject"><code>WaitForSingleObject</code></a> 或类似的函数。</p>
+</blockquote>
+<h2 id="进程中的所有线程自行终止"><a href="#进程中的所有线程自行终止" class="headerlink" title="进程中的所有线程自行终止"></a>进程中的所有线程自行终止</h2><p>如果进程中的所有线程自行终止（可能因为它们都调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 或它们都被 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread"><code>TerminateThread</code></a> 终止），那么进程的退出码将被设置为与终止运行的最后一个线程相同的退出码。</p>
+<h1 id="子进程"><a href="#子进程" class="headerlink" title="子进程"></a>子进程</h1><p>在设计应用程序时，可能会遇到希望请求执行另一个任务，但同时希望原本任务继续执行的情况。其中一种解决方法是创建一个新的进程，让新进程执行另一个任务。</p>
+<p>如果要创建新进程，让它执行一些任务并等待结果，则可以使用类似于如下的代码：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">PROCESS_INFORMATION pi<span class="token punctuation">;</span>
+DWORD dwExitCode<span class="token punctuation">;</span>
+
+<span class="token comment">// Spawn the child process.</span>
+BOOL fSuccess <span class="token operator">=</span> <span class="token function">CreateProcess</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>pi<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>fSuccess<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Close the thread handle as soon as it is no longer needed!</span>
+    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hThread<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Suspend our execution until the child has terminated.</span>
+    <span class="token function">WaitForSingleObject</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">,</span> INFINITE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// The child process terminated; get its exit code.</span>
+    <span class="token function">GetExitCodeProcess</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">,</span> <span class="token operator">&amp;</span>dwExitCode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Close the process handle as soon as it is no longer needed.</span>
+    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>大多数情况下，应用程序会将另一个进程作为分离的进程（Detached Process）启动。这意味着在创建并执行进程后，父进程不再需要与新进程进行交互。若要放弃与子进程的所有关联，则父进程必须通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 来关闭其拥有的新进程及其主线程的句柄。如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">PROCESS_INFORMATION pi<span class="token punctuation">;</span>
+
+<span class="token comment">// Spawn the child process.</span>
+BOOL fSuccess <span class="token operator">=</span> <span class="token function">CreateProcess</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>pi<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>fSuccess<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// Allow the system to destroy the process &amp; thread kernel</span>
+    <span class="token comment">// objects as soon as the child process terminates.</span>
+    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hThread<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/14/windows-via-c-cpp-5th-jobs/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Jobs</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/07/windows-via-c-cpp-5th-kernel-objects/">
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Kernel Objects</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            PV: 
+            <span id="leancloud-site-pv"></span>
+            
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            UV: 
+            <span id="leancloud-site-uv"></span>
+            
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

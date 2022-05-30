@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <link rel="icon" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaoxing Shan">
+  <meta name="keywords" content="Yaoxing Shan,dsyx">
+  
+    <meta name="description" content="抢占式操作系统必须使用某种算法来确定线程应该何时调度以及运行多长时间。每个线程都有一个在线程内核对象中维护的上下文结构。此上下文结构反映线程上次执行时线程的 CPU 寄存器的状态。每隔 20 ms 左右，Windows 会查看当前存在的所有线程内核对象，选择一个可调度的线程内核对象，并使用上次保存在线程上下文中的值加载 CPU 的寄存器。此操作称为 上下文切换（Context Switch） 。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - Thread Scheduling, Priorities, and Affinities">
+<meta property="og:url" content="https://dsyx.github.io/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/index.html">
+<meta property="og:site_name" content="Yaoxing Shan">
+<meta property="og:description" content="抢占式操作系统必须使用某种算法来确定线程应该何时调度以及运行多长时间。每个线程都有一个在线程内核对象中维护的上下文结构。此上下文结构反映线程上次执行时线程的 CPU 寄存器的状态。每隔 20 ms 左右，Windows 会查看当前存在的所有线程内核对象，选择一个可调度的线程内核对象，并使用上次保存在线程上下文中的值加载 CPU 的寄存器。此操作称为 上下文切换（Context Switch） 。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T06:42:49.000Z">
+<meta property="article:modified_time" content="2022-05-25T06:08:03.640Z">
+<meta property="article:author" content="Yaoxing Shan">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities - Yaoxing Shan</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="/css/fluid_custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaoxing Shan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-17 14:42" pubdate>
+        2022/02/17
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      88 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities</h1>
+            
+            <div class="markdown-body">
+              <p>抢占式操作系统必须使用某种算法来确定线程应该何时调度以及运行多长时间。每个线程都有一个在线程内核对象中维护的上下文结构。此上下文结构反映线程上次执行时线程的 CPU 寄存器的状态。每隔 20 ms 左右，Windows 会查看当前存在的所有线程内核对象，选择一个可调度的线程内核对象，并使用上次保存在线程上下文中的值加载 CPU 的寄存器。此操作称为 <em>上下文切换（Context Switch）</em> 。</p>
+<h2 id="挂起或恢复线程"><a href="#挂起或恢复线程" class="headerlink" title="挂起或恢复线程"></a>挂起或恢复线程</h2><p>线程内核对象内部有一个值，该值指示线程的挂起计数。调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 时，将创建线程内核对象并将其挂起计数初始化为 <code>1</code>。这可以防止将线程即刻调度到 CPU，因为初始化线程需要一些时间，不希望系统在线程完全准备就绪之前开始执行线程。</p>
+<p>线程完全初始化后，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 将检查是否传递了 <code>CREATE_SUSPENDED</code> 标志。若是，则函数返回，新线程将保持挂起状态；若否，则函数会将线程的挂起计数递减为 <code>0</code>。</p>
+<p>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread"><code>ResumeThread</code></a> 可使线程恢复运行，调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread"><code>SuspendThread</code></a> 则可使线程挂起。线程可以被挂起多次，但也必须被恢复同样的次数才能使其可调度。</p>
+<h2 id="挂起或恢复进程"><a href="#挂起或恢复进程" class="headerlink" title="挂起或恢复进程"></a>挂起或恢复进程</h2><p>对于 Windows 来说，不存在挂起或恢复进程的概念，因为进程永远不会调度到 CPU。可以通过挂起进程中的所有线程来达到类似的效果。</p>
+<h2 id="睡眠"><a href="#睡眠" class="headerlink" title="睡眠"></a>睡眠</h2><p>线程可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep"><code>Sleep</code></a> 函数来告诉系统它不希望在一定时间内被调度。此函数使线程挂起，直到经过指定的时间。使用此函数时需要注意如下事项：</p>
+<ul>
+<li>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep"><code>Sleep</code></a> 允许线程自愿地放弃其剩余的时间片。</li>
+<li>系统使线程在指定时间内不可调度，但不保证线程在指定时间后会被及时调度。</li>
+<li>可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep"><code>Sleep</code></a> 并传递 <code>INFINITE</code> 给参数，以告诉系统永远不要调度线程。</li>
+<li>可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep"><code>Sleep</code></a> 并传递 <code>0</code> 给参数，以告诉系统线程自愿地放弃其剩余的时间片，系统可以调度其他线程。如果没有更多具有相同优先级或更高优先级的可调度线程，那么系统可以重新调度该线程。</li>
+</ul>
+<h2 id="切换到另一线程"><a href="#切换到另一线程" class="headerlink" title="切换到另一线程"></a>切换到另一线程</h2><p>系统提供了一个名为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread"><code>SwitchToThread</code></a> 的函数，该函数允许另一个可调度线程运行。</p>
+<p>调用此函数时，系统将检查是否存在饥饿线程。若否，则 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread"><code>SwitchToThread</code></a> 会立即返回；若是，则 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread"><code>SwitchToThread</code></a> 将调度该线程。允许饥饿线程运行一个时间片，然后系统调度器将照常运行。</p>
+<p>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread"><code>SwitchToThread</code></a> 类似于调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep"><code>Sleep</code></a> 并传递 <code>0</code>。不同之处在于，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread"><code>SwitchToThread</code></a> 允许执行优先级较低的线程。</p>
+<h3 id="在超线程-cpu-上切换到另一线程"><a href="#在超线程-cpu-上切换到另一线程" class="headerlink" title="在超线程 CPU 上切换到另一线程"></a>在超线程 CPU 上切换到另一线程</h3><p>超线程（Hyper-Threaded）CPU 具有多个“逻辑（logical）”CPU，每个都可以运行一个线程。每个线程都有自己的架构状态（寄存器组），但所有线程共享主执行资源（如 CPU cache）。当一个线程暂停（缓存未命中、分支错误预测、等待上一条指令的结果等）时，CPU 会自动执行另一个线程，这是在没有操作系统干预的情况下发生的。</p>
+<p>在超线程 CPU 上执行旋转循环（spin loops）时，需要强制当前线程暂停以便其他线程可以访问芯片的资源。x86 架构支持 PAUSE 汇编语言指令。PAUSE 指令可确保避免内存顺序冲突，从而提高性能。在 x86 上，PAUSE 指令等效于 REP NOP 指令，这使得它与不支持超线程的早期的 IA-32 CPU 兼容。PAUSE 会导致有限延迟（在某些 CPU 上为 0）。在 Win32 API 中，x86 PAUSE 指令是通过调用 WinNT.h 中定义的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-yieldprocessor"><code>YieldProcessor</code></a> 宏发出的。</p>
+<h2 id="线程的执行时间"><a href="#线程的执行时间" class="headerlink" title="线程的执行时间"></a>线程的执行时间</h2><p>有时希望计算线程执行特定任务所需的时间。许多人所做的是编写类似于以下内容的代码，利用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64"><code>GetTickCount64</code></a> 函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Get the current time (start time).</span>
+ULONGLONG qwStartTime <span class="token operator">=</span> <span class="token function">GetTickCount64</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Perform complex algorithm here.</span>
+
+<span class="token comment">// Subtract start time from current time to get duration.</span>
+ULONGLONG qwElapsedTime <span class="token operator">=</span> <span class="token function">GetTickCount64</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> qwStartTime<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>此代码做出一个简单的假设：它不会被中断。但是，在抢占式操作系统中永远不会知道线程何时会被调度。可以利用操作系统提供的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes"><code>GetThreadTimes</code></a> 函数来准确地实现这个任务：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">__int64 <span class="token function">FileTimeToQuadWord</span><span class="token punctuation">(</span>PFILETIME pft<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span><span class="token punctuation">(</span><span class="token function">Int64ShllMod32</span><span class="token punctuation">(</span>pft<span class="token operator">-></span>dwHighDateTime<span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span> <span class="token operator">|</span> pft<span class="token operator">-></span>dwLowDateTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token function">PerformLongOperation</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    FILETIME ftKernelTimeStart<span class="token punctuation">,</span> ftKernelTimeEnd<span class="token punctuation">;</span>
+    FILETIME ftUserTimeStart<span class="token punctuation">,</span> ftUserTimeEnd<span class="token punctuation">;</span>
+    FILETIME ftDummy<span class="token punctuation">;</span>
+    __int64 qwKernelTimeElapsed<span class="token punctuation">,</span> qwUserTimeElapsed<span class="token punctuation">,</span> qwTotalTimeElapsed<span class="token punctuation">;</span>
+
+    <span class="token comment">// Get starting times.</span>
+    <span class="token function">GetThreadTimes</span><span class="token punctuation">(</span><span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftDummy<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftDummy<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftKernelTimeStart<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftUserTimeStart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Perform complex algorithm here.</span>
+
+    <span class="token comment">// Get ending times.</span>
+    <span class="token function">GetThreadTimes</span><span class="token punctuation">(</span><span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftDummy<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftDummy<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftKernelTimeEnd<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftUserTimeEnd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Get the elapsed kernel and user times by converting the start and end times from FILETIMEs to quad words,</span>
+    <span class="token comment">// and then subtract the start times from the end times.</span>
+    qwKernelTimeElapsed <span class="token operator">=</span> <span class="token function">FileTimeToQuadWord</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ftKernelTimeEnd<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">FileTimeToQuadWord</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ftKernelTimeStart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    qwUserTimeElapsed <span class="token operator">=</span> <span class="token function">FileTimeToQuadWord</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ftUserTimeEnd<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token function">FileTimeToQuadWord</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ftUserTimeStart<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// Get total time duration by adding the kernel and user times.</span>
+    qwTotalTimeElapsed <span class="token operator">=</span> qwKernelTimeElapsed <span class="token operator">+</span> qwUserTimeElapsed<span class="token punctuation">;</span>
+    
+    <span class="token comment">// The total elapsed time is in qwTotalTimeElapsed.</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes"><code>GetProcessTimes</code></a> 返回应用于指定进程中所有线程（甚至是已终止的线程）的时间。</p>
+<p>对于高分辨率的分析，Windows 提供了以下函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">QueryPerformanceFrequency</span><span class="token punctuation">(</span>LARGE_INTEGER<span class="token operator">*</span> pliFrequency<span class="token punctuation">)</span><span class="token punctuation">;</span>
+BOOL <span class="token function">QueryPerformanceCounter</span><span class="token punctuation">(</span>LARGE_INTEGER<span class="token operator">*</span> pliCount<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<h2 id="context"><a href="#context" class="headerlink" title="CONTEXT"></a>CONTEXT</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-context"><code>CONTEXT</code></a> 结构允许系统记住线程的状态，以便线程可以在下次运行时从中断的位置继续。</p>
+<p>Windows 允许查看线程内核对象的内部，并获取其当前的 CPU 寄存器组。为此，只需调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadcontext"><code>GetThreadContext</code></a> 函数。</p>
+<p>应该在调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadcontext"><code>GetThreadContext</code></a> 之前调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread"><code>SuspendThread</code></a>。否则，可能线程可能会被调度，并且线程的上下文可能与返回的内容不同。线程实际上有两个上下文：用户模式和内核模式。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadcontext"><code>GetThreadContext</code></a> 只能返回线程的用户模式上下文。如果调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread"><code>SuspendThread</code></a> 来停止某个线程，但该线程当前正以内核模式执行，那么即使 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread"><code>SuspendThread</code></a> 实际上尚未挂起该线程，其用户模式上下文也是稳定的。</p>
+<p>Windows 允许更改 <code>CONTEXT</code> 结构中的成员，然后通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadcontext"><code>SetThreadContext</code></a> 将新的寄存器值放回线程内核对象中。同样地，要更改上下文的线程应先挂起，否则结果将不可预测。</p>
+<h2 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h2><p>每个线程都分配有一个优先级编号，范围从 0（最低）到 31（最高）。系统会根据优先级从高到低地检查可调度线程，这意味着相对较低优先级的线程可能永远不会被调度，如系统中一直存在优先级为 31 的可调度线程，则优先级为 30 的可调度线程永远不会被调度，这种情况称为饥饿（Starvation）。在多处理器机器上发生饥饿的可能性会低得多，因为在这种机器上，优先级为 31 的可调度线程和优先级为 30 的可调度线程可能同时运行，系统会始终尝试使 CPU 保持繁忙状态，仅当没有可调度线程时，CPU 才会空闲。</p>
+<p>优先级较高的线程始终会抢占优先级较低的线程，而不管较低优先级的线程正在执行什么。例如，如果优先级为 5 的线程正在运行，并且系统确定了优先级为 6 的线程已准备好运行，则系统会立即挂起优先级较低的线程（即使它处于其时间片的中间），并将 CPU 分配给优先级较高的线程（获得一个完整的时间片）。</p>
+<p>当系统启动时，它会创建一个名为 <em>零页线程（Zero Page Thread）</em> 的特殊线程。此线程优先级为 0，并且是整个系统中唯一以优先级 0 运行的线程。在没有其他线程需要执行工作时，零页线程负责将系统中所有空闲 RAM 页清零。</p>
+<h2 id="优先级的抽象视图"><a href="#优先级的抽象视图" class="headerlink" title="优先级的抽象视图"></a>优先级的抽象视图</h2><p>Windows API 在系统的调度器上公开了一个抽象层，这个抽象层会根据正在运行的系统的版本来“解释”请求的参数。</p>
+<p>在设计应用程序时，应考虑可能与应用程序一起运行的其他应用程序。然后，应该根据应用程序中线程的响应速度选择优先级类别。</p>
+<p>Windows 支持六种优先级类别：空闲（Idle）、低于正常（Below Normal）、正常（Normal）、高于正常（Above Normal）、高（High）和实时（Real-time）。正常是最常见的优先级类别，99% 的应用程序都应该使用它：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Priority Class</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Real-time</td>
+<td align="left">The threads in this process must respond immediately to events to execute time-critical tasks. Threads in this process also preempt operating system components. Use this priority class with extreme caution.</td>
+</tr>
+<tr>
+<td align="left">High</td>
+<td align="left">The threads in this process must respond immediately to events to execute time-critical tasks. The Task Manager runs at this class so that a user can kill runaway processes.</td>
+</tr>
+<tr>
+<td align="left">Above normal</td>
+<td align="left">The threads in this process run between the normal and high-priority classes.</td>
+</tr>
+<tr>
+<td align="left">Normal</td>
+<td align="left">The threads in this process have no special scheduling needs.</td>
+</tr>
+<tr>
+<td align="left">Below normal</td>
+<td align="left">The threads in this process run between the normal and idle priority classes.</td>
+</tr>
+<tr>
+<td align="left">Idle</td>
+<td align="left">The threads in this process run when the system is otherwise idle. This process is typically used by screen savers or background utility and statistics-gathering software.</td>
+</tr>
+</tbody></table>
+<p>空闲优先级类别非常适合在系统几乎不执行任何操作时运行的应用程序。只有在绝对必要时，才应使用高优先级类别。如果可能，应避免使用实时优先级类别。实时优先级可能会干扰操作系统任务，因为大多数操作系统线程以较低的优先级执行。</p>
+<blockquote>
+<p>注：进程不能运行在实时优先级类别，除非用户具有“提高计划优先级（Increase Scheduling Priority）”权限。默认情况下，任何指定为管理员或超级用户的用户都具有此权限。</p>
+</blockquote>
+<p>选择优先级类别后，应该停止考虑应用程序与其他应用程序的关连，而只需专注于应用程序中的线程即可。</p>
+<p>Windows 支持七个相对线程优先级：空闲（Idle）、最低（Lowest）、低于正常（Below Normal）、正常（Normal）、高于正常（Above Normal）、最高（Highest）和时间关键（Time-critical）。这些优先级相对于进程的优先级类别。同样，大多数线程使用正常的线程优先级：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Relative Thread Priority</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Time-critical</td>
+<td align="left">Thread runs at 31 for the real-time priority class and at 15 for all other priority classes.</td>
+</tr>
+<tr>
+<td align="left">Highest</td>
+<td align="left">Thread runs two levels above normal.</td>
+</tr>
+<tr>
+<td align="left">Above normal</td>
+<td align="left">Thread runs one level above normal.</td>
+</tr>
+<tr>
+<td align="left">Normal</td>
+<td align="left">Thread runs normally for the process’ priority class.</td>
+</tr>
+<tr>
+<td align="left">Below normal</td>
+<td align="left">Thread runs one level below normal.</td>
+</tr>
+<tr>
+<td align="left">Lowest</td>
+<td align="left">Thread runs two levels below normal.</td>
+</tr>
+<tr>
+<td align="left">Idle</td>
+<td align="left">Thread runs at 16 for the real-time priority class and at 1 for all other priority classes.</td>
+</tr>
+</tbody></table>
+<p>进程优先级类别与相对线程优先级共同决定线程的优先级。应用开发者不应该使用具体数值来为线程赋予优先级，而应该通过设置进程优先级类别和相对线程优先级来让系统决定如何映射到优先级级别：</p>
+<table>
+<thead>
+  <tr>
+    <th rowspan="2" style="text-align:center">Relative Thread Priority</th>
+    <th colspan="6" style="text-align:center">Process Priority Class</th>
+  </tr>
+  <tr>
+    <th style="text-align:center">Idle</th>
+    <th style="text-align:center">Below Normal</th>
+    <th style="text-align:center">Normal</th>
+    <th style="text-align:center">Above Normal</th>
+    <th style="text-align:center">High</th>
+    <th style="text-align:center">Real-Time</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Time-critical</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">31</td>
+  </tr>
+  <tr>
+    <td>Highest</td>
+    <td style="text-align:center">6</td>
+    <td style="text-align:center">8</td>
+    <td style="text-align:center">10</td>
+    <td style="text-align:center">12</td>
+    <td style="text-align:center">15</td>
+    <td style="text-align:center">26</td>
+  </tr>
+  <tr>
+    <td>Above normal</td>
+    <td style="text-align:center">5</td>
+    <td style="text-align:center">7</td>
+    <td style="text-align:center">9</td>
+    <td style="text-align:center">11</td>
+    <td style="text-align:center">14</td>
+    <td style="text-align:center">25</td>
+  </tr>
+  <tr>
+    <td>Normal</td>
+    <td style="text-align:center">4</td>
+    <td style="text-align:center">6</td>
+    <td style="text-align:center">8</td>
+    <td style="text-align:center">10</td>
+    <td style="text-align:center">13</td>
+    <td style="text-align:center">24</td>
+  </tr>
+  <tr>
+    <td>Below normal</td>
+    <td style="text-align:center">3</td>
+    <td style="text-align:center">5</td>
+    <td style="text-align:center">7</td>
+    <td style="text-align:center">9</td>
+    <td style="text-align:center">12</td>
+    <td style="text-align:center">23</td>
+  </tr>
+  <tr>
+    <td>Lowest</td>
+    <td style="text-align:center">2</td>
+    <td style="text-align:center">4</td>
+    <td style="text-align:center">6</td>
+    <td style="text-align:center">8</td>
+    <td style="text-align:center">11</td>
+    <td style="text-align:center">22</td>
+  </tr>
+  <tr>
+    <td>Idle</td>
+    <td style="text-align:center">1</td>
+    <td style="text-align:center">1</td>
+    <td style="text-align:center">1</td>
+    <td style="text-align:center">1</td>
+    <td style="text-align:center">1</td>
+    <td style="text-align:center">16</td>
+  </tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>注：上表的映射值在不同版本的 Windows 上可能存在差异。该表没有展示线程映射到优先级 0 的任何方式，这是因为 0 优先级是为零页线程保留的，并且系统不允许任何其他线程的优先级为 0。此外，无法获得以下优先级别：17、18、19、20、21、27、28、29 或 30，这些是为在内核模式下运行的设备驱动程序准备的。</p>
+</blockquote>
+<h2 id="编程优先级"><a href="#编程优先级" class="headerlink" title="编程优先级"></a>编程优先级</h2><p>当调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw"><code>CreateProcess</code></a> 时，可以在 <code>fdwCreate</code> 参数中传递所需的优先级类别：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Priority Class</th>
+<th align="left">Symbolic Identifiers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Real-time</td>
+<td align="left"><code>REALTIME_PRIORITY_CLASS</code></td>
+</tr>
+<tr>
+<td align="left">High</td>
+<td align="left"><code>HIGH_PRIORITY_CLASS</code></td>
+</tr>
+<tr>
+<td align="left">Above normal</td>
+<td align="left"><code>ABOVE_NORMAL_PRIORITY_CLASS</code></td>
+</tr>
+<tr>
+<td align="left">Normal</td>
+<td align="left"><code>NORMAL_PRIORITY_CLASS</code></td>
+</tr>
+<tr>
+<td align="left">Below normal</td>
+<td align="left"><code>BELOW_NORMAL_PRIORITY_CLASS</code></td>
+</tr>
+<tr>
+<td align="left">Idle</td>
+<td align="left"><code>IDLE_PRIORITY_CLASS</code></td>
+</tr>
+</tbody></table>
+<p>通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass"><code>SetPriorityClass</code></a> 可以更改指定进程的优先级类别。通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getpriorityclass"><code>GetPriorityClass</code></a> 可以检索指定进程的优先级类别。</p>
+<p>使用命令行 Shell 调用程序时，程序的起始优先级为正常。使用 <code>START</code> 命令调用程序时可以指定一个起始优先级，如 <code>START /LOW CALC.EXE</code>。</p>
+<p>首次创建线程时，其相对线程优先级始终设置为正常。使用以下函数可以设置和获取线程的相对优先级：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">SetThreadPriority</span><span class="token punctuation">(</span>HANDLE hThread<span class="token punctuation">,</span> <span class="token keyword">int</span> nPriority<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token function">GetThreadPriority</span><span class="token punctuation">(</span>HANDLE hThread<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<h3 id="动态提升线程优先级"><a href="#动态提升线程优先级" class="headerlink" title="动态提升线程优先级"></a>动态提升线程优先级</h3><p>系统通过将线程的相对优先级与线程的进程的优先级类别相结合来确定线程的优先级，这称为线程的基本优先级（Base Priority Level）。有时，系统会提升线程的优先级，这通常是为了响应某些 I/O 事件（如窗口消息或磁盘读取）。</p>
+<p>例如，在高优先级类别进程中有一个正常线程优先级的线程，其基本优先级为 13。如果用户按下某个键，则系统会将 <code>WM_KEYDOWN</code> 消息放到线程的队列中。由于消息已出现在线程的队列中，因此线程是可调度的。此外，键盘设备驱动程序可以告诉系统暂时提高线程的级别，因此，线程可能会提升 2，并且当前优先级为 15。</p>
+<p>线程会被调度一个时间片（优先级为 15）。一旦该时间片到期，系统就会将线程的优先级从 15 降至 14，以进行下一个时间片。线程的第三个时间片会以优先级 13 执行。线程的其他时间片都将在优先级 13（线程的基本优先级）下执行。</p>
+<blockquote>
+<p>注：线程的当前优先级永远不会低于线程的基本优先级。</p>
+</blockquote>
+<p>系统仅提升基本优先级介于 1 和 15 之间的线程。实际上，这就是为什么此范围被称为动态优先级范围的原因。此外，系统永远不会将线程提升到实时范围（高于 15）。由于实时范围内的线程大多数执行操作系统功能，因此对强制实施上限可防止应用程序干扰操作系统。此外，系统从不动态提升实时范围（16 到 31）中的线程。</p>
+<p>系统的动态提升可能会对线程的性能产生影响，因此 Microsoft 添加了以下两个函数，以允许禁用系统对线程优先级的动态提升：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">SetProcessPriorityBoost</span><span class="token punctuation">(</span>HANDLE hProcess<span class="token punctuation">,</span> BOOL bDisablePriorityBoost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+BOOL <span class="token function">SetThreadPriorityBoost</span><span class="token punctuation">(</span>HANDLE hThread<span class="token punctuation">,</span> BOOL bDisablePriorityBoost<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost"><code>SetProcessPriorityBoost</code></a> 告诉系统为进程内的所有线程启用或禁用优先级提升；<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriorityboost"><code>SetThreadPriorityBoost</code></a> 允许为单个线程启用或禁用优先级提升。这两个函数具有对应项，允许您确定是启用还是禁用优先级提升：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">GetProcessPriorityBoost</span><span class="token punctuation">(</span>HANDLE hProcess<span class="token punctuation">,</span> PBOOL pbDisablePriorityBoost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+BOOL <span class="token function">GetThreadPriorityBoost</span><span class="token punctuation">(</span>HANDLE hThread<span class="token punctuation">,</span> PBOOL pbDisablePriorityBoost<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<p>另一种情况也会导致系统动态提升线程的优先级。比如，一个优先级为 4 的线程已准备好运行，但无法运行，因为优先级为 8 的线程是可持续调度的。在这种情况下，优先级 4 线程渴望 CPU 时间。当系统检测到某个线程在大约三到四秒内 CPU 时间不足时，它会动态地将饥饿线程的优先级提升为 15，并允许该线程运行两倍的时间量。当两倍时间量到期时，该线程会马上回到其基本优先级。</p>
+<h3 id="为前台进程调整调度器"><a href="#为前台进程调整调度器" class="headerlink" title="为前台进程调整调度器"></a>为前台进程调整调度器</h3><p>当用户使用进程的窗口时，该进程称为前台进程（Foreground Process），所有其他进程都是后台进程（Background Process）。用户肯定更希望他或她使用的进程比后台进程的行为响应更快。为了提高前台进程的响应能力，Windows 调整了前台进程中线程的调度算法。系统为前台进程线程提供的时间量比它们通常接收的时间量大。仅当前台进程属于正常优先级类别时，才会执行此调整。如果它属于任何其他优先级，则不执行任何调整。</p>
+<h3 id="安排-i-o-请求优先级"><a href="#安排-i-o-请求优先级" class="headerlink" title="安排 I/O 请求优先级"></a>安排 I/O 请求优先级</h3><p>设置线程优先级会影响线程如何调度 CPU 资源。然而，线程还会执行 I/O 请求以从磁盘文件中读取和写入数据。如果低优先级线程获得 CPU 时间，它可以在很短的时间内简单地将数百或数千个 I/O 请求入队。由于 I/O 请求通常需要时间来处理，因此低优先级线程可能会通过挂起高优先级线程来显著影响系统的响应能力，从而阻止它们完成工作。因此，您可以看到计算机在执行长时间运行的低优先级服务（如磁盘碎片整理程序、病毒扫描程序、内容索引器等）时响应速度变慢。</p>
+<p>从 Windows Vista 开始，线程可以在发出 I/O 请求时指定优先级。可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority"><code>SetThreadPriority</code></a> 并传递 <code>THREAD_MODE_BACKGROUND_BEGIN</code> 来告诉 Windows，该线程应该发出低优先级的 I/O 请求。请注意，这也会降低线程的 CPU 调度优先级。可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority"><code>SetThreadPriority</code></a> 并传递 <code>THREAD_ MODE_BACKGROUND_END</code> 将线程返回到发出正常优先级 I/O 请求（以及正常的 CPU 调度优先级）。</p>
+<p>如果希望进程中的所有线程发出低优先级 I/O 请求并具有低 CPU 调度，则可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass"><code>SetPriorityClass</code></a> 并传递 <code>PROCESS_MODE_BACKGROUND_BEGIN</code>。</p>
+<p>在更精细的粒度下，正常优先级线程可以对特定文件执行后台优先级 I/O，如以下代码片段所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">FILE_IO_PRIORITY_HINT_INFO phi<span class="token punctuation">;</span>
+phi<span class="token punctuation">.</span>PriorityHint <span class="token operator">=</span> IoPriorityHintLow<span class="token punctuation">;</span>
+<span class="token function">SetFileInformationByHandle</span><span class="token punctuation">(</span>hFile<span class="token punctuation">,</span> FileIoPriorityHintInfo<span class="token punctuation">,</span> <span class="token operator">&amp;</span>phi<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>PriorityHint<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div>
+
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle"><code>SetFileInformationByHandle</code></a> 设置的优先级会覆盖 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass"><code>SetPriorityClass</code></a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriority"><code>SetThreadPriority</code></a> 设置的优先级。</p>
+<h2 id="亲和性"><a href="#亲和性" class="headerlink" title="亲和性"></a>亲和性</h2><p>默认情况下，Windows Vista 在将线程分配给处理器时使用 <em>软亲和性（Soft Affinity）</em> 。这意味着，如果所有其他因素相同，它将尝试在线程上次运行的那个处理器上运行线程。让线程保留在单个处理器上有助于重用仍在处理器内存缓存中的数据。</p>
+<p>有一种称为 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Non-uniform_memory_access">NUMA（Non-Uniform Memory Access）</a> 的计算机架构，其中机器由多个板组成。每个板都有独自的 CPU 和独自的内存库。当 CPU 访问其自身板上的内存时，NUMA 系统的性能最佳。如果 CPU 需要接触另一块板上的内存，则会对性能造成巨大影响。在这种场景下，希望同一进程的线程都能在同一板上的 CPU 上运行。为了适应这种计算机架构，Windows Vista 允许设置进程和线程亲和性，即可以控制哪些 CPU 可以运行哪些线程，这称为 <em>硬亲和性（Hard Affinity）</em>。</p>
+<p>系统在启动时会确定计算机中有多少 CPU 可用，应用程序可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo"><code>GetSystemInfo</code></a> 来查询计算机上的 CPU 数量。默认情况下，可以将任何线程调度到这些 CPU 中的任何一个。要将单个进程中的线程限制在可用 CPU 的子集上运行，可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setprocessaffinitymask"><code>SetProcessAffinityMask</code></a>。</p>
+<blockquote>
+<p>注：子进程会继承进程亲和性。此外，还可以使用作业内核对象来设置一组进程的亲和性。</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprocessaffinitymask"><code>GetProcessAffinityMask</code></a> 会返回进程的亲和性掩码。</p>
+<p>可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadaffinitymask"><code>SetThreadAffinityMask</code></a> 为单个线程设置亲和性掩码。</p>
+<p>有时，将线程强制到特定的 CPU 并不是一个好主意。要为线程设置理想的 CPU，请调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessor"><code>SetThreadIdealProcessor</code></a>。</p>
+<p>还可以在可执行文件的标头中设置处理器亲和性，可以使用类似于如下代码来利用 ImageHlp.h 中声明的函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Load the EXE into memory.</span>
+PLOADED_IMAGE pLoadedImage <span class="token operator">=</span> <span class="token function">ImageLoad</span><span class="token punctuation">(</span>szExeName<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Get the current load configuration information for the EXE.</span>
+IMAGE_LOAD_CONFIG_DIRECTORY ilcd<span class="token punctuation">;</span>
+<span class="token function">GetImageConfigInformation</span><span class="token punctuation">(</span>pLoadedImage<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ilcd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Change the processor affinity mask.</span>
+ilcd<span class="token punctuation">.</span>ProcessAffinityMask <span class="token operator">=</span> <span class="token number">0x00000003</span><span class="token punctuation">;</span> <span class="token comment">// I desire CPUs 0 and 1</span>
+
+<span class="token comment">// Save the new load configuration information.</span>
+<span class="token function">SetImageConfigInformation</span><span class="token punctuation">(</span>pLoadedImage<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ilcd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Unload the EXE from memory</span>
+<span class="token function">ImageUnload</span><span class="token punctuation">(</span>pLoadedImage<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>当 Windows Vista 在 x86 计算机上启动时，可以限制系统将使用的 CPU 数量。在引导周期中，系统会检查 BCD（Boot Configuration Data），该数据存储用于替换旧的 boot.ini 文本文件，并提供计算机硬件和固件的更高级别的抽象。</p>
+<p>BCD 的编程化配置是通过 WMI（Windows Management Instrumentation）完成的，也可以通过图形用户界面访问一些最常见的参数。要限制 Windows 使用的 CPU 数量，您需要在 <strong>控制面板（Control Panel） &gt; 管理工具（Administrative Tools） &gt; 系统配置（System Configuration） &gt; 引导（Boot） &gt; 高级选项（Advanced） &gt; 处理器个数（Number Of Processors）</strong> 中填写所需的数目。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/18/windows-via-c-cpp-5th-thread-synchronization-in-user-mode/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Synchronization in User Mode</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/14/windows-via-c-cpp-5th-thread-basics/">
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Basics</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            PV: 
+            <span id="leancloud-site-pv"></span>
+            
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            UV: 
+            <span id="leancloud-site-uv"></span>
+            
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

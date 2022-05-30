@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <link rel="icon" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaoxing Shan">
+  <meta name="keywords" content="Yaoxing Shan,dsyx">
+  
+    <meta name="description" content="每个人对如何管理线程的创建和销毁都有自己不同的看法。Windows 提供了一个 线程池 机制（围绕 IOCP 构建），使得开发者可以更容易地管理线程的创建和销毁。这个新的通用线程池不一定适用于所有情况，但它通常表现得足够好，并且可以为您节省大量的开发时间。 新的线程池函数允许您：  异步地调用函数 定时地调用函数 当单个内核对象已示意时调用函数 当异步 I&#x2F;O 请求完成时调用函数   注：Micr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - The Windows Thread Pool">
+<meta property="og:url" content="https://dsyx.github.io/2022/03/03/windows-via-c-cpp-5th-the-windows-thread-pool/index.html">
+<meta property="og:site_name" content="Yaoxing Shan">
+<meta property="og:description" content="每个人对如何管理线程的创建和销毁都有自己不同的看法。Windows 提供了一个 线程池 机制（围绕 IOCP 构建），使得开发者可以更容易地管理线程的创建和销毁。这个新的通用线程池不一定适用于所有情况，但它通常表现得足够好，并且可以为您节省大量的开发时间。 新的线程池函数允许您：  异步地调用函数 定时地调用函数 当单个内核对象已示意时调用函数 当异步 I&#x2F;O 请求完成时调用函数   注：Micr">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-03T01:44:16.000Z">
+<meta property="article:modified_time" content="2022-05-25T06:08:03.638Z">
+<meta property="article:author" content="Yaoxing Shan">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Windows via C/C++, 5th Edition - The Windows Thread Pool - Yaoxing Shan</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="/css/fluid_custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaoxing Shan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - The Windows Thread Pool">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-03 09:44" pubdate>
+        2022/03/03
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      40 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows via C/C++, 5th Edition - The Windows Thread Pool</h1>
+            
+            <div class="markdown-body">
+              <p>每个人对如何管理线程的创建和销毁都有自己不同的看法。Windows 提供了一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/procthread/thread-pools">线程池</a> 机制（围绕 IOCP 构建），使得开发者可以更容易地管理线程的创建和销毁。这个新的通用线程池不一定适用于所有情况，但它通常表现得足够好，并且可以为您节省大量的开发时间。</p>
+<p>新的线程池函数允许您：</p>
+<ul>
+<li>异步地调用函数</li>
+<li>定时地调用函数</li>
+<li>当单个内核对象已示意时调用函数</li>
+<li>当异步 I/O 请求完成时调用函数</li>
+</ul>
+<blockquote>
+<p>注：Microsoft 从 Windows 2000 开始就将线程池 API 引入 Windows。在 Windows Vista 中，Microsoft 重构了线程池，并且引入了一组新的线程池 API。</p>
+</blockquote>
+<p>当一个进程初始化时，它没有任何与线程池组件相关的开销。但是，一旦调用了线程池函数，系统就会为进程创建一些内核资源，并且其中一些资源会一直保持到进程终止为止。使用线程池的开销取决于您的使用情况，线程池将代表进程分配一些线程、内核对象和内部数据结构。</p>
+<h2 id="异步地调用函数"><a href="#异步地调用函数" class="headerlink" title="异步地调用函数"></a>异步地调用函数</h2><p>要使用线程池异步地执行函数，首先需要定义一个与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms686295(v=vs.85)">SimpleCallback</a> 原型匹配的函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID NTAPI <span class="token function">SimpleCallback</span><span class="token punctuation">(</span>
+    PTP_CALLBACK_INSTANCE pInstance<span class="token punctuation">,</span>
+    PVOID pvContext<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div>
+
+<p>然后，向线程池提交请求，让其中一个线程执行该函数。要向线程池提交请求，只需调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 函数。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 函数会将一个 <em>工作项（Work Item）</em> 添加到线程池的队列中（通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/fileio/postqueuedcompletionstatus"><code>PostQueuedCompletionStatus</code></a>）。</p>
+<blockquote>
+<p>注：您不需要自己调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a>。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 函数将自动为进程创建默认线程池，并让线程池中的一个线程调用您的回调函数。</p>
+</blockquote>
+<p>线程池中的线程在处理完请求后不会立即销毁，而是返回到线程池中，以便准备处理其他入队的工作项。线程池不断重用其中的线程，而不是不断创建和销毁线程，这可以显著地提高应用程序的性能，因为创建和销毁线程需要花费大量时间。线程池会根据一个内部算法和应用程序的工作负载来调整自身的一些参数（如线程数）。</p>
+<h3 id="显式地控制工作项"><a href="#显式地控制工作项" class="headerlink" title="显式地控制工作项"></a>显式地控制工作项</h3><p>在某些情况下（如缺少内存或配额限制），对 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 的调用可能会失败。当多个操作应当协同工作时，这是不可接受的。例如，一个定时器指望一个工作项取消另一个操作。当定时器被设置时，您必须确保被取消的工作项已提交并由线程池处理。但是，当定时器到期时，内存可用性或配额条件可能与创建定时器时不同，并且对 对 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 的调用可能会失败。在这种情况下，您将在创建定时器的同时创建一个工作项对象，并保留它，直到您明确需要将工作项提交到线程池。</p>
+<p>每次调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-trysubmitthreadpoolcallback"><code>TrySubmitThreadpoolCallback</code></a> 时，都会在内部代表您分配一个工作项。如果您计划提交大量工作项，那么您最好将工作项创建一次并多次提交，这样可以提高性能和减少内存消耗。您可以通过使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolwork"><code>CreateThreadpoolWork</code></a> 函数来创建工作项。当您要向线程池提交请求时，可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-submitthreadpoolwork"><code>SubmitThreadpoolWork</code></a> 函数。</p>
+<p>如果您有另一个线程想要取消已提交的工作项或挂起自身以等待工作项完成其处理，则可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-waitforthreadpoolworkcallbacks"><code>WaitForThreadpoolWorkCallbacks</code></a> 函数。</p>
+<p>当您不再需要工作项时，应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpoolwork"><code>CloseThreadpoolWork</code></a> 函数来释放它。</p>
+<h2 id="定时地调用函数"><a href="#定时地调用函数" class="headerlink" title="定时地调用函数"></a>定时地调用函数</h2><p>有时应用程序需要在特定时间执行某些任务。Windows 提供了一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/sync/waitable-timer-objects">可等待定时器内核对象</a> ，该对象可以轻松地获取基于时间的通知。</p>
+<p>许多程序员会为应用程序将执行的每个基于时间的任务创建一个可等待定时器对象，这是不必要的，并且浪费系统资源。您可以创建单个可等待定时器，将其设置为下一个预定时间，然后为下一个时间重置定时器，依此类推。然而，完成此操作的代码编写起来十分棘手。幸运的是，您可以让线程池函数为您管理此操作。</p>
+<p>若要计划在特定时间执行工作项，首先需要使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms686790(v=vs.85)"><code>TimeoutCallback</code></a> 原型定义一个回调函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID CALLBACK <span class="token function">TimeoutCallback</span><span class="token punctuation">(</span>
+    PTP_CALLBACK_INSTANCE pInstance<span class="token punctuation">,</span>
+    PVOID pvContext<span class="token punctuation">,</span>
+    PTP_TIMER pTimer<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>然后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpooltimer"><code>CreateThreadpoolTimer</code></a> 函数来通知线程池何时调用您的函数。</p>
+<p>如果要向线程池注册定时器，请调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpooltimer"><code>SetThreadpoolTimer</code></a> 函数。您也可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-isthreadpooltimerset"><code>IsThreadpoolTimerSet</code></a> 来确定是否设置了定时器。</p>
+<p>最后，您可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-waitforthreadpooltimercallbacks"><code>WaitForThreadpoolTimerCallbacks</code></a> 让线程等待定时器完成，也可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpooltimer"><code>CloseThreadpoolTimer</code></a> 函数来释放定时器的内存。</p>
+<h2 id="当单个内核对象已示意时调用函数"><a href="#当单个内核对象已示意时调用函数" class="headerlink" title="当单个内核对象已示意时调用函数"></a>当单个内核对象已示意时调用函数</h2><p>Microsoft 研究发现许多应用程序产生线程只是为了等待一个内核对象变为已示意状态。一旦对象已示意，线程就会将某种通知发布到另一个线程，然后循环返回，等待对象再次示意。</p>
+<p>如果您想注册一个要在内核对象已示意时执行的工作项，首先，您编写一个与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms687017(v=vs.85)"><code>WaitCallback</code></a> 原型匹配的函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID CALLBACK <span class="token function">WaitCallback</span><span class="token punctuation">(</span>
+    PTP_CALLBACK_INSTANCE pInstance<span class="token punctuation">,</span>
+    PVOID Context<span class="token punctuation">,</span>
+    PTP_WAIT Wait<span class="token punctuation">,</span>
+    TP_WAIT_RESULT WaitResult<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>然后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolwait"><code>CreateThreadpoolWait</code></a> 来创建一个线程池等待对象。</p>
+<p>当准备就绪时，您需要通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolwait"><code>SetThreadpoolWait</code></a> 函数将内核对象绑定到此线程池等待对象。</p>
+<p>在内部，线程池有一个线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjects"><code>WaitForMultipleObjects</code></a> 函数，并将已通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolwait"><code>SetThreadpoolWait</code></a> 函数注册的句柄集传递给它，<code>bWaitAll</code> 参数设置为 <code>FALSE</code>，以便每当任何句柄已示意时，线程都会唤醒。此外，由于 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitformultipleobjects"><code>WaitForMultipleObjects</code></a> 不允许将同一句柄多次传递给它，因此应确保不要使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolwait"><code>SetThreadpoolWait</code></a> 多次注册同一句柄。</p>
+<p>一旦线程池线程调用了您的回调函数，相应的等待项将处于非活动状态。这意味着如果您希望在同一内核对象已示意时再次调用回调函数，则需要通过再次调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-setthreadpoolwait"><code>SetThreadpoolWait</code></a> 来重新注册它。</p>
+<p>最后，您可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-waitforthreadpoolwaitcallbacks"><code>WaitForThreadpoolWaitCallbacks</code></a> 让线程等待等待项完成，也可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpoolwait"><code>CloseThreadpoolWait</code></a> 函数来释放等待项的内存。</p>
+<h2 id="当异步-i-o-请求完成时调用函数"><a href="#当异步-i-o-请求完成时调用函数" class="headerlink" title="当异步 I/O 请求完成时调用函数"></a>当异步 I/O 请求完成时调用函数</h2><p>当您希望将 IOCP 与线程池配合使用时，您必须告诉线程池当异步 I/O 操作完成时要调用哪个函数。</p>
+<p>首先，您必须编写一个与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms684124(v=vs.85)"><code>OverlappedCompletionRoutine</code></a> 原型匹配的函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID CALLBACK <span class="token function">OverlappedCompletionRoutine</span><span class="token punctuation">(</span>
+    PTP_CALLBACK_INSTANCE pInstance<span class="token punctuation">,</span>
+    PVOID pvContext<span class="token punctuation">,</span>
+    PVOID pOverlapped<span class="token punctuation">,</span>
+    ULONG IoResult<span class="token punctuation">,</span>
+    ULONG_PTR NumberOfBytesTransferred<span class="token punctuation">,</span>
+    PTP_IO pIo<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>然后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-createthreadpoolio"><code>CreateThreadpoolIo</code></a> 创建一个线程池 I/O 对象。</p>
+<p>准备就绪后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-startthreadpoolio"><code>StartThreadpoolIo</code></a> 函数将 I/O 项中嵌入的文件/设备与线程池的内部 IOCP 相关联。</p>
+<p>要注意的是，在每次调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile"><code>ReadFile</code></a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile"><code>WriteFile</code></a> 之前，必须先调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-startthreadpoolio"><code>StartThreadpoolIo</code></a> 。如果在发出 I/O 请求之前未调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-startthreadpoolio"><code>StartThreadpoolIo</code></a> ，则不会调用您的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms684124(v=vs.85)"><code>OverlappedCompletionRoutine</code></a> 回调函数。</p>
+<p>如果要在发出 I/O 请求后停止调用您的回调函数，那么可以调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-cancelthreadpoolio"><code>CancelThreadpoolIo</code></a> 函数。</p>
+<p>当您使用完文件/设备后，您应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 将其关闭，并调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-closethreadpoolio"><code>CloseThreadpoolIo</code></a> 函数将其与线程池解除关联。</p>
+<p>您可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-waitforthreadpooliocallbacks"><code>WaitForThreadpoolIoCallbacks</code></a> 函数让另一个线程等待未完成的 I/O 请求完成。</p>
+<h2 id="回调终止操作"><a href="#回调终止操作" class="headerlink" title="回调终止操作"></a>回调终止操作</h2><p>线程池使回调方法能够方便地描述在回调函数返回时应执行的一些操作。您的回调函数有一个不透明的 <code>PTP_CALLBACK_INSTANCE</code> 类型的 <code>pInstance</code> 参数，该参数可以用于调用以下函数之一：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID <span class="token function">LeaveCriticalSectionWhenCallbackReturns</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">,</span> PCRITICAL_SECTION pcs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+VOID <span class="token function">ReleaseMutexWhenCallbackReturns</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">,</span> HANDLE mut<span class="token punctuation">)</span><span class="token punctuation">;</span>
+VOID <span class="token function">ReleaseSemaphoreWhenCallbackReturns</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">,</span> HANDLE sem<span class="token punctuation">,</span> DWORD crel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+VOID <span class="token function">SetEventWhenCallbackReturns</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">,</span> HANDLE evt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+VOID <span class="token function">FreeLibraryWhenCallbackReturns</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">,</span> HMODULE mod<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>对于这些函数，线程池将执行下表指示的终止操作：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Function</th>
+<th align="left">Termination Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-leavecriticalsectionwhencallbackreturns"><code>LeaveCriticalSectionWhenCallbackReturns</code></a></td>
+<td align="left">When the callback returns, the thread pool automatically calls <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-leavecriticalsection"><code>LeaveCriticalSection</code></a>, passing the specified <code>CRITICAL_SECTION</code> structure.</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-releasemutexwhencallbackreturns"><code>ReleaseMutexWhenCallbackReturns</code></a></td>
+<td align="left">When the callback returns, the thread pool automatically calls <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-releasemutex"><code>ReleaseMutex</code></a>, passing the specified <code>HANDLE</code>.</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-releasesemaphorewhencallbackreturns"><code>ReleaseSemaphoreWhenCallbackReturns</code></a></td>
+<td align="left">When the callback returns, the thread pool automatically calls <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-releasesemaphore"><code>ReleaseSemaphore</code></a>, passing the specified <code>HANDLE</code>.</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-seteventwhencallbackreturns"><code>SetEventWhenCallbackReturns</code></a></td>
+<td align="left">When the callback returns, the thread pool automatically calls <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent"><code>SetEvent</code></a>, passing the specified <code>HANDLE</code>.</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/threadpoolapiset/nf-threadpoolapiset-freelibrarywhencallbackreturns"><code>FreeLibraryWhenCallbackReturns</code></a></td>
+<td align="left">When the callback returns, the thread pool automatically calls <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary"><code>FreeLibrary</code></a>, passing the specified <code>HMODULE</code>.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：对于给定的回调实例，线程池线程只应用一个终止效果。调用的最后一个函数将覆盖前一个函数。</p>
+</blockquote>
+<p>除了这些终止函数之外，还有两个额外的函数适用于回调实例：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">CallbackMayRunLong</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">)</span><span class="token punctuation">;</span>
+VOID <span class="token function">DisassociateCurrentThreadFromCallback</span><span class="token punctuation">(</span>PTP_CALLBACK_INSTANCE pci<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/03/windows-via-c-cpp-5th-fibers/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Fibers</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/28/windows-via-c-cpp-5th-synchronous-and-asynchronous-device-io/">
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Synchronous and Asynchronous Device I/O</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            PV: 
+            <span id="leancloud-site-pv"></span>
+            
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            UV: 
+            <span id="leancloud-site-uv"></span>
+            
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

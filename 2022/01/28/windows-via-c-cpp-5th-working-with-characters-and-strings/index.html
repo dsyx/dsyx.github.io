@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <link rel="icon" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaoxing Shan">
+  <meta name="keywords" content="Yaoxing Shan,dsyx">
+  
+    <meta name="description" content="在 Windows Vista 中，每个 Unicode 字符都使用 UTF-16（Unicode Transformation Format）进行编码。UTF-16 将每个字符编码为 16 位，当 16 位不足以表示所有字符时，其将使用代理（surrogate），代理是一种使用 32 位来表示单个字符的方法。 从 Windows NT 起，所有 Windows 版本都是使用 Unicode 从头">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - Working with Characters and Strings">
+<meta property="og:url" content="https://dsyx.github.io/2022/01/28/windows-via-c-cpp-5th-working-with-characters-and-strings/index.html">
+<meta property="og:site_name" content="Yaoxing Shan">
+<meta property="og:description" content="在 Windows Vista 中，每个 Unicode 字符都使用 UTF-16（Unicode Transformation Format）进行编码。UTF-16 将每个字符编码为 16 位，当 16 位不足以表示所有字符时，其将使用代理（surrogate），代理是一种使用 32 位来表示单个字符的方法。 从 Windows NT 起，所有 Windows 版本都是使用 Unicode 从头">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-28T06:01:18.000Z">
+<meta property="article:modified_time" content="2022-05-25T06:08:03.641Z">
+<meta property="article:author" content="Yaoxing Shan">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Windows via C/C++, 5th Edition - Working with Characters and Strings - Yaoxing Shan</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="/css/fluid_custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaoxing Shan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Working with Characters and Strings">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-28 14:01" pubdate>
+        2022/01/28
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows via C/C++, 5th Edition - Working with Characters and Strings</h1>
+            
+            <div class="markdown-body">
+              <p>在 Windows Vista 中，每个 Unicode 字符都使用 UTF-16（Unicode Transformation Format）进行编码。UTF-16 将每个字符编码为 16 位，当 16 位不足以表示所有字符时，其将使用代理（surrogate），代理是一种使用 32 位来表示单个字符的方法。</p>
+<p>从 Windows NT 起，所有 Windows 版本都是使用 Unicode 从头开始构建的。也就是说，用于创建窗口、显示文本、执行字符串操作等的所有核心函数都需要 Unicode 字符串。如果你通过传递 ANSI 字符串来调用任何 Windows 函数，那么函数会首先将该字符串转换为 Unicode，然后将 Unicode 字符串传递给操作系统。如果希望从函数返回 ANSI 字符串，则系统会在返回到应用程序之前将 Unicode 字符串转换为 ANSI 字符串。所有这些转换都是在您看不见的情况下发生的。当然，系统执行所有这些字符串转换需要时间和内存开销。</p>
+<p>当 Windows 公开那些需要字符串作为参数的函数时，它通常会提供两个版本：以大写 W 结尾的接受 Unicode 字符串；以大写 A 结尾的接受 ANSI 字符串，如 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw"><code>CreateWindowExW</code></a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexa"><code>CreateWindowExA</code></a>。然而我们通常调用的是无后缀的函数（如 <code>CreateWindowEx</code>），这使我们可以通过宏定义 <code>UNICODE</code> 来控制编译时使用那个版本的函数。</p>
+<blockquote>
+<p>注：使用 Visual Studio 创建新项目时，默认定义了 <code>UNICODE</code>。这意味着默认使用 W 版本函数。</p>
+</blockquote>
+<blockquote>
+<p>注：在 Windows Vista 下，A 版本函数只是一个简单的翻译层，它会分配内存以将 ANSI 字符串转换为 Unicode 字符串，然后调用 W 版本函数，当 W 版本函数返回后，A 版本函数会释放掉它分配的内存，最后将结果返回给你。因此应用程序需要更多内存并且运行速度相对较慢。从一开始就使用 Unicode 开发应用程序，可以使应用程序更有效地执行。此外，Windows 的这些翻译函数中存在一些众所周知的 bug，因此避免使用它们也可以消除一些潜在的 bug。如果你要创建动态链接库（DLL）给其它开发者使用，那么建议你将函数导出为两个版本：W 版本和 A 版本，其中 A 版本仅作为一个简单的翻译层。这样可以与 Windows 函数的风格保持一致。</p>
+</blockquote>
+<p>Windows API 中的某些函数，如 <code>WinExec</code> 和 <code>OpenFile</code> 是为了保持对 16-bit Windows 程序的兼容，新的应用开发应该避免使用它们。</p>
+<p>与 Windows 函数一样，C 运行时库提供了一组函数来操作 ANSI 字符和字符串（如 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strlen-wcslen-mbslen-mbslen-l-mbstrlen-mbstrlen-l?view=msvc-170"><code>strlen</code></a>），另一组函数来操作 Unicode 字符和字符串（如 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/strlen-wcslen-mbslen-mbslen-l-mbstrlen-mbstrlen-l?view=msvc-170"><code>wcslen</code></a>）。但是，与 Windows 函数不同，这些函数的 ANSI 版本不会将字符串转换为 Unicode，然后在内部调用函数的 Unicode 版本。</p>
+<p>任何修改字符串的函数都会显露出潜在的危险：如果目标字符串缓冲区不够大，无法包含生成的字符串，则会发生内存损坏。下面是一个示例：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// The following puts 4 characters in a</span>
+<span class="token comment">// 3-character buffer, resulting in memory corruption</span>
+WCHAR szBuffer<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> L<span class="token string">""</span><span class="token punctuation">;</span>
+<span class="token function">wcscpy</span><span class="token punctuation">(</span>szBuffer<span class="token punctuation">,</span> L<span class="token string">"abc"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// The terminating 0 is a character too!</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p><code>strcpy</code> 和 <code>wcscpy</code> 函数（以及大多数其他字符串操作函数）的问题在于，它们不接受指定缓冲区最大大小的参数，因此，该函数不知道它正在损坏内存。Microsoft 现在提供了一组新函数，这些函数取代了 C 运行时库提供的不安全的字符串操作函数（如 <code>wcscat</code>）。若要编写安全的代码，不应再使用任何熟悉的修改字符串的 C 运行时函数。相反，您应该利用 Microsoft 的 <code>StrSafe.h</code> 文件定义的安全的字符串函数。</p>
+<p>对于许多打开文本文件并对其进行处理的应用程序（如编译器），如果在打开文件后，应用程序可以确定文本文件是否包含 ANSI 字符或 Unicode 字符，这将非常方便。由AdvApi32导出并在中声明的IsTextUnicode函数.dll可以帮助进行以下区分：</p>
+<p>由 <code>AdvApi32.dll</code> 导出并由 <code>WinBase.h</code> 声明的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-istextunicode"><code>IsTextUnicode</code></a> 函数用于确定缓冲区是否可能包含某种形式的 Unicode 文本。该函数使用一系列统计和确定性方法来猜测缓冲区的内容。由于这不是一门精确的科学，因此该函数可能会返回不正确的结果。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/07/windows-via-c-cpp-5th-kernel-objects/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Kernel Objects</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/28/windows-via-c-cpp-5th-error-handling/">
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Error Handling</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            PV: 
+            <span id="leancloud-site-pv"></span>
+            
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            UV: 
+            <span id="leancloud-site-uv"></span>
+            
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

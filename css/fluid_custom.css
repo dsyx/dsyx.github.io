@@ -1,0 +1,13 @@
+.markdown-body table tr {
+    background-color: var(--board-bg-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.markdown-body table tr:nth-child(2n) {
+    background-color: var(--board-bg-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.markdown-body table th{
+  background-color: #e8eaed;
+}

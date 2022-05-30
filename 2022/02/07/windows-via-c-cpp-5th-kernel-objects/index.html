@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <link rel="icon" href="https://i.postimg.cc/1zvJGfCd/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yaoxing Shan">
+  <meta name="keywords" content="Yaoxing Shan,dsyx">
+  
+    <meta name="description" content="什么是内核对象？Windows 内核对象（Kernel Object）是一个包含资源维护信息的结构化内存块。系统创建并维护若干类型的内核对象，如访问令牌对象（access token object）。因为内核对象的数据结构只能被内核访问，所以用户程序只能通过调用 Windows 函数来创建和维护这些对象。当调用了会创建内核对象的函数时，函数会返回一个句柄（handle）以标识所创建的对象。 句柄是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - Kernel Objects">
+<meta property="og:url" content="https://dsyx.github.io/2022/02/07/windows-via-c-cpp-5th-kernel-objects/index.html">
+<meta property="og:site_name" content="Yaoxing Shan">
+<meta property="og:description" content="什么是内核对象？Windows 内核对象（Kernel Object）是一个包含资源维护信息的结构化内存块。系统创建并维护若干类型的内核对象，如访问令牌对象（access token object）。因为内核对象的数据结构只能被内核访问，所以用户程序只能通过调用 Windows 函数来创建和维护这些对象。当调用了会创建内核对象的函数时，函数会返回一个句柄（handle）以标识所创建的对象。 句柄是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-07T02:40:27.000Z">
+<meta property="article:modified_time" content="2022-05-25T06:08:03.636Z">
+<meta property="article:author" content="Yaoxing Shan">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Windows via C/C++, 5th Edition - Kernel Objects - Yaoxing Shan</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      
+        
+          
+        
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
+      
+      
+        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
+      
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="/css/fluid_custom.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Yaoxing Shan</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Kernel Objects">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-02-07 10:40" pubdate>
+        2022/02/07
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      57 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Windows via C/C++, 5th Edition - Kernel Objects</h1>
+            
+            <div class="markdown-body">
+              <h1 id="什么是内核对象？"><a href="#什么是内核对象？" class="headerlink" title="什么是内核对象？"></a>什么是内核对象？</h1><p>Windows 内核对象（Kernel Object）是一个包含资源维护信息的结构化内存块。系统创建并维护若干类型的<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/sysinfo/kernel-objects">内核对象</a>，如访问令牌对象（access token object）。因为内核对象的数据结构只能被内核访问，所以用户程序只能通过调用 Windows 函数来创建和维护这些对象。当调用了会创建内核对象的函数时，函数会返回一个句柄（handle）以标识所创建的对象。</p>
+<p>句柄是进程相关的，因此直接将句柄值传递给其它进程是没有意义的。但是可以通过“<a href="#%E8%B7%A8%E8%BF%9B%E7%A8%8B%E8%BE%B9%E7%95%8C%E5%85%B1%E4%BA%AB%E5%86%85%E6%A0%B8%E5%AF%B9%E8%B1%A1">跨进程边界共享内核对象（Sharing Kernel Objects Across Process Boundaries）</a>”来实现进程间的内核对象共享。</p>
+<h2 id="使用计数"><a href="#使用计数" class="headerlink" title="使用计数"></a>使用计数</h2><p>内核对象是属于内核的而不是进程的，这意味着内核对象的生命周期不一定与进程的生命周期一致。内核通过每个对象中包含的一个使用计数（usage count）来获知有多少进程正在使用它。</p>
+<p>使用计数是内核对象最通用的数据成员之一。当对象首次被创建时，其使用计数会被设置为 1；然后，当另一个进程访问它时，使用计数就递增 1。当一个进程终止时，内核会自动递减该进程仍然打开的所有内核对象的使用计数。如果内核对象的使用计数为 0，那么内核就会销毁该对象。</p>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><p>可以使用安全描述符（security descriptor）来保护内核对象。安全描述符描述了对象的属主和对象的访问权限。安全描述符通常用于编写服务器应用。</p>
+<p>大多数用于创建内核对象的函数有一个指向 <code>SECURITY_ATTRIBUTES</code> 结构的指针参数，如 <code>CreateFileMapping</code> 函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE <span class="token function">CreateFileMapping</span><span class="token punctuation">(</span>
+    HANDLE hFile<span class="token punctuation">,</span>
+    PSECURITY_ATTRIBUTES psa<span class="token punctuation">,</span>
+    DWORD flProtect<span class="token punctuation">,</span>
+    DWORD dwMaximumSizeHigh<span class="token punctuation">,</span>
+    DWORD dwMaximumSizeLow<span class="token punctuation">,</span>
+    PCTSTR pszName<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>大多数应用会简单地向该参数传递 <code>NULL</code> 以使用默认的安全。</p>
+<h1 id="进程的内核对象句柄表"><a href="#进程的内核对象句柄表" class="headerlink" title="进程的内核对象句柄表"></a>进程的内核对象句柄表</h1><p>当一个进程被初始化时，系统会为其分配一个句柄表。这个表只用于内核对象，而不会用于用户对象或 GDI 对象。没有文档介绍如何处理和管理这个表，但其大体上如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Index</th>
+<th align="left">Pointer to Kernel Object Memory Block</th>
+<th align="left">Access Mask (DWORD of Flag Bits)</th>
+<th align="left">Flags</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">0x????????</td>
+<td align="left">0x????????</td>
+<td align="left">0x????????</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left">0x????????</td>
+<td align="left">0x????????</td>
+<td align="left">0x????????</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+</tbody></table>
+<h2 id="创建内核对象"><a href="#创建内核对象" class="headerlink" title="创建内核对象"></a>创建内核对象</h2><p>当进程首次被初始化时，它的句柄表是空的。然后，当进程中的线程调用创建内核对象的函数（如 <code>CreateFileMapping</code>）时，内核就会为该对象分配一个内存块并初始化它。接着，内核会对进程的句柄表进行扫描以找出一个空项，然后记录下对象的相关信息。</p>
+<p>用于创建内核对象的函数都会返回与进程相关的句柄，这些句柄可以被同一进程中运行的任一或所有线程使用。</p>
+<p>当调用一个接受内核对象句柄作为参数的函数时，应当传递一个由 <strong>Create*</strong> 函数返回的值。如果传递了一个无效的句柄，那么该函数会返回失败，并且 <code>GetLastError</code> 返回 6（<code>ERROR_INVALID_HANDLE</code>）。如果调用函数以创建内核对象但调用失败了，那么返回的句柄值通常是 0（<code>NULL</code>），这是由于系统内存不足或者遇到了安全问题；少数函数在失败时返回的句柄值是 -1（<code>INVALID_HANDLE_VALUE</code>）。因此，当查看会创建内核对象的函数返回值时，必须格外小心。</p>
+<h2 id="关闭内核对象"><a href="#关闭内核对象" class="headerlink" title="关闭内核对象"></a>关闭内核对象</h2><p>可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 来关闭一个已打开的内核对象句柄。</p>
+<p>该函数首先会检查调用进程的句柄表，以确保句柄值的合法性。如果该句柄是有效的，那么系统会递减该内核对象的使用计数（若使用计数为 0，则从内存中销毁该内核对象）；如果句柄是无效的，那么 <code>CloseHandle</code> 会返回 <code>FALSE</code> 并且 <code>GetLastError</code> 会返回 <code>ERROR_INVALID_HANDLE</code>（若进程处于调试状态下，则系统会抛出异常 0xC0000008 “An invalid handle was specified”）。</p>
+<p><code>CloseHandle</code> 返回前会清除进程句柄表中相应的项，因此传递给 <code>CloseHandle</code> 的句柄将在进程中失效，后续上下文中不应该再使用它。</p>
+<h1 id="跨进程边界共享内核对象"><a href="#跨进程边界共享内核对象" class="headerlink" title="跨进程边界共享内核对象"></a>跨进程边界共享内核对象</h1><p>有三种允许进程共享内核对象的机制：</p>
+<ul>
+<li>对象句柄继承（Object Handle Inheritance）</li>
+<li>命名对象（Naming Object）</li>
+<li>复制对象句柄（Duplicating Object Handle）</li>
+</ul>
+<h2 id="对象句柄继承"><a href="#对象句柄继承" class="headerlink" title="对象句柄继承"></a>对象句柄继承</h2><p>仅当进程间存在父子关系时才能使用对象句柄继承。在这种场景下，父进程有一个或多个可用的内核对象，父进程决定产生一个子进程并赋予子进程访问父进程的内核对象。为此，父进程必须执行如下步骤。</p>
+<p>首先，当父进程创建内核对象时，父进程必须向系统指示它希望该对象的句柄是可继承的。为了创建可继承的句柄，父进程必须分配并初始化 <code>SECURITY_ATTRIBUTES</code> 结构，并将该结构的地址传递给特定的 <strong>Create</strong> 函数。下面的代码创建一个互斥对象（mutex object），并得到一个可继承的句柄：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">SECURITY_ATTRIBUTES sa<span class="token punctuation">;</span>
+sa<span class="token punctuation">.</span>nLength <span class="token operator">=</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>sa<span class="token punctuation">)</span><span class="token punctuation">;</span>
+sa<span class="token punctuation">.</span>lpSecurityDescriptor <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+sa<span class="token punctuation">.</span>bInheritHandle <span class="token operator">=</span> TRUE<span class="token punctuation">;</span> <span class="token comment">// Make the returned handle inheritable.</span>
+
+HANDLE hMutex <span class="token operator">=</span> <span class="token function">CreateMutex</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>sa<span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>下一步，父进程调用 <code>CreateProcess</code> 函数来产生子进程，其中传递 <code>TRUE</code> 给 <code>bInheritHandles</code> 参数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">CreateProcess</span><span class="token punctuation">(</span>
+    PCTSTR pszApplicationName<span class="token punctuation">,</span>
+    PTSTR pszCommandLine<span class="token punctuation">,</span>
+    PSECURITY_ATTRIBUTES psaProcess<span class="token punctuation">,</span>
+    PSECURITY_ATTRIBUTES psaThread<span class="token punctuation">,</span>
+    BOOL bInheritHandles<span class="token punctuation">,</span>
+    DWORD dwCreationFlags<span class="token punctuation">,</span>
+    PVOID pvEnvironment<span class="token punctuation">,</span>
+    PCTSTR pszCurrentDirectory<span class="token punctuation">,</span>
+    LPSTARTUPINFO pStartupInfo<span class="token punctuation">,</span>
+    PPROCESS_INFORMATION pProcessInformation<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>由于 <code>bInheritHandles</code> 参数为 <code>TRUE</code>，所以系统在创建子进程时会为其初始化一个空的进程句柄表，并且遍历父进程的进程句柄表以找出那些可继承的句柄项，然后将这些句柄项复制到子进程的进程句柄表的相同位置（这意味着这些句柄值在父子进程中是相同的）。此外，系统还会递增这些内核对象的使用计数。之后，父子进程对这些句柄的维护是独立的，即父进程关闭句柄不会影响到子进程。</p>
+<blockquote>
+<p>注：对象句柄继承仅在生成子进程时应用。若父进程要使用可继承的句柄创建任何新的内核对象，则已在运行的子进程将不会继承这些新句柄。</p>
+</blockquote>
+<p>对象句柄继承有一个奇怪的特征：子进程不知道它继承了什么句柄。这通常需要一些方法（如命令行参数、进程间通信、环境变量等）来告知子进程它所继承的句柄的值。</p>
+<h3 id="更改句柄的标志"><a href="#更改句柄的标志" class="headerlink" title="更改句柄的标志"></a>更改句柄的标志</h3><p>有时，父进程可能需要产生多个子进程，但只希望其中几个子进程继承对象句柄。这种情况下可以使用 <code>SetHandleInformation</code> 函数来改变内核对象句柄的继承标志：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">SetHandleInformation</span><span class="token punctuation">(</span>
+    HANDLE hObject<span class="token punctuation">,</span>
+    DWORD dwMask<span class="token punctuation">,</span>
+    DWORD dwFlags<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p><code>hObject</code> 标识一个有效的句柄，<code>dwMask</code> 告知函数哪些标志需要更改，<code>dwFlags</code> 指示需要将标志设置为什么。</p>
+<p>当前，每个句柄都有两个关联的标志，可以通过或运算来同时操作两个标志：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">HANDLE_FLAG_INHERIT</span>             <span class="token expression"><span class="token number">0x00000001</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">HANDLE_FLAG_PROTECT_FROM_CLOSE</span>  <span class="token expression"><span class="token number">0x00000002</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+
+<p>若要打开继承标志：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">SetHandleInformation</span><span class="token punctuation">(</span>hObj<span class="token punctuation">,</span> HANDLE_FLAG_INHERIT<span class="token punctuation">,</span> HANDLE_FLAG_INHERIT<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>若要关闭继承标志：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">SetHandleInformation</span><span class="token punctuation">(</span>hObj<span class="token punctuation">,</span> HANDLE_FLAG_INHERIT<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p><code>HANDLE_FLAG_PROTECT_FROM_CLOSE</code> 标志告知系统此句柄不应允许被关闭。关闭打开了该标志的句柄会失败或发生异常（调试状态下）。</p>
+<h2 id="命名对象"><a href="#命名对象" class="headerlink" title="命名对象"></a>命名对象</h2><p>大多数内核对象可以被命名。如下函数可以创建命名的互斥量：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE <span class="token function">CreateMutex</span><span class="token punctuation">(</span>
+    PSECURITY_ATTRIBUTES psa<span class="token punctuation">,</span>
+    BOOL bInitialOwner<span class="token punctuation">,</span>
+    PCTSTR pszName<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>大多数的内核对象创建函数具有一个通用的最后参数 <code>pszName</code>。如果此参数为 <code>NULL</code>，那么系统将创建匿名的内核对象，否则创建指定名字的对象。命名的内核对象可以通过名字来共享。<code>pszName</code> 接受一个零结尾（zero-terminated）的字符串，其最大长度为 <code>MAX_PATH</code>。</p>
+<blockquote>
+<p>注：Microsoft 没有提供内核对象的命名指南，所有内核对象共享单个命名空间，因此需要注意赋予给内核对象的名字是否已存在。</p>
+</blockquote>
+<p>通过命名来共享对象的方式如下，假设进程 A 启动并调用如下函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE hMutexProcessA <span class="token operator">=</span> <span class="token function">CreateMutex</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"JeffMutex"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>随后，假设进程 B 启动并调用如下函数：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE hMutexProcessB <span class="token operator">=</span> <span class="token function">CreateMutex</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"JeffMutex"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>当进程 B 调用 <code>CreateMutex</code> 时，系统会先检查名字为“JeffMutex”的内核对象是否已存在，然后会检查对象的类型。由于 B 尝试创建互斥量，并且已存在的名字为“JeffMutex”的对象也是互斥量，因此系统会进行安全检查以查看调用方是否具有对该对象的完全访问权限。若有，则系统将在 B 的句柄表中找出一个空条目，并将该条目初始化为指向现有的内核对象。若对象类型不匹配，或者调用方被拒绝访问，则 <code>CreateMutex</code> 将失败。</p>
+<p>当 B 调用的 <code>CreateMutex</code> 成功返回时，实际上并没有创建一个互斥量，而是简单地引用了系统中已存在的同名互斥量。因此“JeffMutex”的使用计数将递增。此外，与对象句柄继承不一样，B 中的句柄值不必与 A 中的相同。</p>
+<p>可以使用 <strong>Open*</strong> 函数来替代 <strong>Create*</strong> 函数以引用已存在的内核对象，如 <code>OpenMutex</code>。与对应的 <strong>Create*</strong> 函数一样，<strong>Open*</strong> 函数也有一个通用的最后参数 <code>pszName</code>。不同的是，如果指定名字的内核对象不存在时，<strong>Create*</strong> 函数会创建它，而 <strong>Open*</strong> 函数只会简单地返回失败。</p>
+<blockquote>
+<p>贴士：可以通过创建一个 GUID 并将其字符串表示作为对象名字来确保对象的唯一性。</p>
+</blockquote>
+<blockquote>
+<p>贴士：可以利用对象名字的唯一性来防止应用程序运行多个实例，如以下代码：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">int</span> WINAPI <span class="token function">_tWinMain</span><span class="token punctuation">(</span>HINSTANCE hInstExe<span class="token punctuation">,</span> HINSTANCE<span class="token punctuation">,</span> PTSTR pszCmdLine<span class="token punctuation">,</span> <span class="token keyword">int</span> nCmdShow<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    HANDLE h <span class="token operator">=</span> <span class="token function">CreateMutex</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"&#123;FA531CC1-0497-11d3-A180-00105A276C3E&#125;"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">GetLastError</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> ERROR_ALREADY_EXISTS<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// There is already an instance of this application running.</span>
+        <span class="token comment">// Close the object and immediately return.</span>
+        <span class="token function">CloseHandle</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">// This is the first instance of this application running.</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment">// Before exiting, close the object.</span>
+    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+</blockquote>
+<h3 id="终端服务命名空间"><a href="#终端服务命名空间" class="headerlink" title="终端服务命名空间"></a>终端服务命名空间</h3><p>终端服务（Terminal Services）会使上述假设的情景发生一些变化。运行终端服务的机器具有多个为内核对象准备的命名空间：一个全局命名空间（通常被服务所使用），用于所有客户端会话都可以访问的内核对象；每个客户端会话都拥有自己的命名空间。</p>
+<p>如果希望获知进程正在运行在哪个终端服务会话上，那么可以使用 <code>ProcessIdToSessionId</code> 函数。示例代码如下：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD processID <span class="token operator">=</span> <span class="token function">GetCurrentProcessId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+DWORD sessionID<span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ProcessIdToSessionId</span><span class="token punctuation">(</span>processID<span class="token punctuation">,</span> <span class="token operator">&amp;</span>sessionID<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">tprintf</span><span class="token punctuation">(</span><span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Process '%u' runs in Terminal Services session '%u'"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> processID<span class="token punctuation">,</span> sessionID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// ProcessIdToSessionId might fail if you don't have enough rights</span>
+    <span class="token comment">// to access the process for which you pass the ID as parameter.</span>
+    <span class="token comment">// Notice that it is not the case here because we're using our own process ID.</span>
+    <span class="token function">tprintf</span><span class="token punctuation">(</span><span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Unable to get Terminal Services session ID for process '%u'"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> processID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>服务的命名内核对象始终位于全局命名空间中。默认情况下，在终端服务中，应用程序的命名内核对象位于会话的命名空间中。但是，可以通过在名字前面加上“Global\”前缀来强制命名对象进入全局命名空间，如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE h <span class="token operator">=</span> <span class="token function">CreateEvent</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Global\\MyName"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>也可以通过在名字前面加上“Local\”前缀来显式声明希望内核对象位于当前会话的命名空间中，如下所示：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE h <span class="token operator">=</span> <span class="token function">CreateEvent</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Local\\MyName"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+
+<p>Microsoft 将 <em>Global</em> 和 <em>Local</em> 视为保留关键字，除非强制使用特定的命名空间，否则不应在对象名称中使用这些关键字。Microsoft 还认为 <em>Session</em> 是一个保留关键字。</p>
+<blockquote>
+<p>注：所有这些保留关键字都区分大小写。</p>
+</blockquote>
+<h2 id="复制对象句柄"><a href="#复制对象句柄" class="headerlink" title="复制对象句柄"></a>复制对象句柄</h2><p>使用 <code>DuplicateHandle</code> 函数可以复制对象句柄：</p>
+<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">BOOL <span class="token function">DuplicateHandle</span><span class="token punctuation">(</span>
+    HANDLE hSourceProcessHandle<span class="token punctuation">,</span>
+    HANDLE hSourceHandle<span class="token punctuation">,</span>
+    HANDLE hTargetProcessHandle<span class="token punctuation">,</span>
+    PHANDLE phTargetHandle<span class="token punctuation">,</span>
+    DWORD dwDesiredAccess<span class="token punctuation">,</span>
+    BOOL bInheritHandle<span class="token punctuation">,</span>
+    DWORD dwOptions<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+
+<p>此函数获取一个进程的句柄表中的条目，并将该条目复制到另一个进程的句柄表中。</p>
+<p><code>hSourceProcessHandle</code> 和 <code>hTargetProcessHandle</code> 必须是进程内核对象句柄，并且必须与调用 <code>DuplicateHandle</code> 函数的进程相关联。</p>
+<p><code>hSourceHandle</code> 可以是任何类型的内核对象句柄，并且其必须与 <code>hSourceProcessHandle</code> 所标识的进程相关联。</p>
+<p><code>phTargetHandle</code> 是一个 <code>HANDLE</code> 变量的地址，该变量用于接收复制后与 <code>hTargetProcessHandle</code> 所标识的进程相关联的句柄值。</p>
+<p>最后的三个参数用于指示目标进程的内核对象句柄项使用的访问掩码和继承标志。<code>dwOptions</code> 可以是 0 或 <code>DUPLICATE_SAME_ACCESS</code> 与 <code>DUPLICATE_CLOSE_SOURCE</code> 的任意组合。指定 <code>DUPLICATE_SAME_ACCESS</code> 会使目标句柄的访问掩码与源句柄的一致，并且使 <code>DuplicateHandle</code> 忽略 <code>dwDesiredAccess</code> 参数。指定 <code>DUPLICATE_CLOSE_SOURCE</code> 会起到在源进程中关闭句柄的效果，源进程可以轻松地将内核对象移交给目标进程，内核对象的使用计数不受影响。</p>
+<p>复制对象句柄也存在与对象句柄继承一样的奇怪特征：目标进程不会收到任何关于有新内核对象可用的通知。由于复制对象句柄发生在目标进程运行之后，因此这通常需要使用进程间通信来告知目标进程新可用内核对象的句柄值。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/02/09/windows-via-c-cpp-5th-processes/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Processes</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/28/windows-via-c-cpp-5th-working-with-characters-and-strings/">
+                        <span class="hidden-mobile">Windows via C/C++, 5th Edition - Working with Characters and Strings</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- LeanCloud 统计PV -->
+        <span id="leancloud-site-pv-container" style="display: none">
+            PV: 
+            <span id="leancloud-site-pv"></span>
+            
+          </span>
+      
+      
+        <!-- LeanCloud 统计UV -->
+        <span id="leancloud-site-uv-container" style="display: none">
+            UV: 
+            <span id="leancloud-site-uv"></span>
+            
+          </span>
+      
+
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+    
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+  <script defer src="/js/leancloud.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
