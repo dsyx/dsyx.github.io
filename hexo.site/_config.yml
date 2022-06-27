@@ -103,7 +103,7 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/dsyx/dsyx.github.io.git
+  repo: git@github.com:dsyx/dsyx.github.io.git
   branch: hexo.site
 
 # hexo-renderer-marked
