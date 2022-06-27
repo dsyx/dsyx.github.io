@@ -29,44 +29,31 @@
 <meta property="article:published_time" content="2022-02-14T08:30:44.000Z">
 <meta property="article:modified_time" content="2022-05-25T06:08:03.639Z">
 <meta property="article:author" content="Yaoxing Shan">
-<meta property="article:tag" content="Windows">
 <meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta property="article:tag" content="Windows">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://dsyx.github.io/images/how-a-thread-is-created-and-initialized.svg">
   
   
+  
   <title>Windows via C/C++, 5th Edition - Thread Basics - Yaoxing Shan</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
-  
-    
-    
-      
-      
-        
-          
-        
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
-      
-      
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
-      
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
@@ -75,25 +62,59 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
 
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-<link rel="stylesheet" href="/css/fluid_custom.css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 6.0.0"></head>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
       <strong>Yaoxing Shan</strong>
@@ -175,6 +196,7 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -187,65 +209,77 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Thread Basics">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-02-14 16:30" pubdate>
-        2022/02/14
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      7.6k 字
-    </span>
   
 
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      64 分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
-      </span>
-    
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Windows via C/C++, 5th Edition - Thread Basics"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-14 16:30" pubdate>
+          2022/02/14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          66 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
@@ -254,16 +288,22 @@
 
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
     <div class="col-lg-8 nopadding-x-md">
       <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
+        <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Windows via C/C++, 5th Edition - Thread Basics</h1>
             
-            <div class="markdown-body">
-              <p>线程（Thread）描述了进程（Process）中的执行路径，由两部分组成：</p>
+            
+              <div class="markdown-body">
+                
+                <p>线程（Thread）描述了进程（Process）中的执行路径，由两部分组成：</p>
 <ul>
 <li>一个被操作系统用来管理线程的<a href="https://dsyx.github.io/2022/02/07/windows-via-c-cpp-5th-kernel-objects/">内核对象</a>。这个内核对象也是系统用来存放关于线程的统计信息的地方。</li>
 <li>一个用来维护线程执行代码时所需的所有函数参数和局部变量的线程栈（Thread Stack）。</li>
@@ -274,25 +314,15 @@
 </blockquote>
 <p>进程所使用的系统资源比线程多得多，其原因是地址空间。为进程创建虚拟地址空间需要大量的系统资源。系统中会进行大量记录保存，这需要大量的内存。此外，由于 <code>.exe</code> 和 <code>.dll</code> 文件被加载到地址空间中，因此还需要文件资源。实际上，线程只有一个内核对象和一个栈，几乎不涉及记录保存，因此只需要很少的内存。</p>
 <h2 id="创建线程"><a href="#创建线程" class="headerlink" title="创建线程"></a>创建线程</h2><p>每个线程都必须有一个入口点（entry-point）函数以开始执行，如下：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD WINAPI <span class="token function">ThreadFunc</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    DWORD dwResult <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token keyword">return</span><span class="token punctuation">(</span>dwResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ThreadFunc</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    DWORD dwResult = <span class="hljs-number">0</span>;<br>    ...<br>    <span class="hljs-keyword">return</span>(dwResult);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>线程函数可以执行任何所需的任务。当线程函数返回时，线程停止运行，其栈内存被释放，线程内核对象（Thread Kernel Object）的使用计数递减。</p>
 <p>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 函数可以创建一个新的线程：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE <span class="token function">CreateThread</span><span class="token punctuation">(</span>
-    PSECURITY_ATTRIBUTES psa<span class="token punctuation">,</span>
-    DWORD cbStackSize<span class="token punctuation">,</span>
-    PTHREAD_START_ROUTINE pfnStartAddr<span class="token punctuation">,</span>
-    PVOID pvParam<span class="token punctuation">,</span>
-    DWORD dwCreateFlags<span class="token punctuation">,</span>
-    PDWORD pdwThreadID<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HANDLE <span class="hljs-title">CreateThread</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">    PSECURITY_ATTRIBUTES psa,</span></span><br><span class="hljs-params"><span class="hljs-function">    DWORD cbStackSize,</span></span><br><span class="hljs-params"><span class="hljs-function">    PTHREAD_START_ROUTINE pfnStartAddr,</span></span><br><span class="hljs-params"><span class="hljs-function">    PVOID pvParam,</span></span><br><span class="hljs-params"><span class="hljs-function">    DWORD dwCreateFlags,</span></span><br><span class="hljs-params"><span class="hljs-function">    PDWORD pdwThreadID)</span></span>;<br></code></pre></td></tr></table></figure>
 
 <p>调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 时，系统会创建一个线程内核对象。线程内核对象不是线程本身，而是操作系统用于管理线程的小型数据结构。这与进程和进程内核对象相互关联的方式相同。系统从进程的地址空间中分配内存以供线程的栈使用。新线程在与创建线程的线程在相同的进程上下文中运行。因此，新线程可以访问进程的所有内核对象句柄、进程中的所有内存以及同一进程中所有其他线程的栈。这使得单个进程中的多个线程非常容易相互通信。</p>
 <blockquote>
-<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 函数是创建线程的 Windows 函数。但是，如果您正在编写 C/C++ 代码，则永远不应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a>。相反，您应该使用 Microsoft C++ 运行时库函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex"><code>_beginthreadex</code></a>。</p>
+<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 函数是创建线程的 Windows 函数。但是，如果您正在编写 C&#x2F;C++ 代码，则永远不应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a>。相反，您应该使用 Microsoft C++ 运行时库函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex"><code>_beginthreadex</code></a>。</p>
 </blockquote>
 <h2 id="终止线程"><a href="#终止线程" class="headerlink" title="终止线程"></a>终止线程</h2><p>线程可以通过四种方式终止：</p>
 <ul>
@@ -318,9 +348,9 @@
 <li>系统会将线程的退出码（保留在线程内核对象中）设置为线程函数的返回值。</li>
 <li>系统将递减线程内核对象的使用计数。</li>
 </ul>
-<h3 id="线程通过调用-exitthread-函数来终止自身"><a href="#线程通过调用-exitthread-函数来终止自身" class="headerlink" title="线程通过调用 ExitThread 函数来终止自身"></a>线程通过调用 ExitThread 函数来终止自身</h3><p>可以通过让线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 来强制线程终止。此函数终止线程，并使操作系统清理线程使用的所有操作系统资源。但是，您的 C/C++ 资源（如 C++ 类对象）可能不会被销毁，参考<a href="https://dsyx.github.io/2022/02/09/windows-via-c-cpp-5th-processes/#%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E8%B0%83%E7%94%A8-exitprocess-%E5%87%BD%E6%95%B0">进程中的一个线程调用 ExitProcess 函数</a>。</p>
+<h3 id="线程通过调用-exitthread-函数来终止自身"><a href="#线程通过调用-exitthread-函数来终止自身" class="headerlink" title="线程通过调用 ExitThread 函数来终止自身"></a>线程通过调用 ExitThread 函数来终止自身</h3><p>可以通过让线程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 来强制线程终止。此函数终止线程，并使操作系统清理线程使用的所有操作系统资源。但是，您的 C&#x2F;C++ 资源（如 C++ 类对象）可能不会被销毁，参考<a href="https://dsyx.github.io/2022/02/09/windows-via-c-cpp-5th-processes/#%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E8%B0%83%E7%94%A8-exitprocess-%E5%87%BD%E6%95%B0">进程中的一个线程调用 ExitProcess 函数</a>。</p>
 <blockquote>
-<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 函数是终止线程的 Windows 函数。如果您正在编写 C/C++ 代码，则永远不应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a>。相反，您应该使用 Microsoft C++ 运行时库函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex"><code>_endthreadex</code></a>。</p>
+<p>注：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 函数是终止线程的 Windows 函数。如果您正在编写 C&#x2F;C++ 代码，则永远不应调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a>。相反，您应该使用 Microsoft C++ 运行时库函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/endthread-endthreadex"><code>_endthreadex</code></a>。</p>
 </blockquote>
 <h3 id="同一进程或另一个进程中的线程调用-terminatethread-函数"><a href="#同一进程或另一个进程中的线程调用-terminatethread-函数" class="headerlink" title="同一进程或另一个进程中的线程调用 TerminateThread 函数"></a>同一进程或另一个进程中的线程调用 TerminateThread 函数</h3><p>与 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a> 不同，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread"><code>TerminateThread</code></a> 可以终止任何线程。</p>
 <blockquote>
@@ -337,16 +367,7 @@
 <p>创建内核对象后，系统将为线程栈分配内存（此内存是从进程的地址空间分配的，因为线程没有自己的地址空间）。然后，系统将两个值写入新线程栈的上端（线程栈始终从高内存地址向低内存地址增进）。首先写入栈的值是传递给 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 的 <code>pvParam</code> 参数的值，紧接着是 <code>pfnStartAddr</code> 的值。</p>
 <p>每个线程都有自己的一组 CPU 寄存器，称为线程的<em>上下文</em>。上下文反映了线程上次执行时线程的 CPU 寄存器的状态。线程的 CPU 寄存器组保存在 <code>CONTEXT</code> 结构（在 WinNT.h 头文件中定义）中。<code>CONTEXT</code> 结构本身包含在线程内核对象中。</p>
 <p>IP（Instruction Pointer）寄存器和 SP（Stack Pointer）寄存器是线程上下文中两个最重要的寄存器。线程始终在进程的上下文中运行，因此这两个地址标识的都是所属进程的地址空间中的内存。初始化线程内核对象时，<code>CONTEXT</code> 结构的 SP 寄存器将设置为 <code>pfnStartAddr</code> 在线程栈上所处位置的地址。IP 寄存器设置为名为 <code>RtlUserThreadStart</code> 的未记录函数的地址，该函数由 NTDLL.dll 模块导出，通常执行如下操作：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID <span class="token function">RtlUserThreadStart</span><span class="token punctuation">(</span>PTHREAD_START_ROUTINE pfnStartAddr<span class="token punctuation">,</span> PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    __try <span class="token punctuation">&#123;</span>
-        <span class="token function">ExitThread</span><span class="token punctuation">(</span><span class="token punctuation">(</span>pfnStartAddr<span class="token punctuation">)</span><span class="token punctuation">(</span>pvParam<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token function">__except</span><span class="token punctuation">(</span><span class="token function">UnhandledExceptionFilter</span><span class="token punctuation">(</span><span class="token function">GetExceptionInformation</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token function">ExitProcess</span><span class="token punctuation">(</span><span class="token function">GetExceptionCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token comment">// NOTE: We never get here.</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">VOID <span class="hljs-title">RtlUserThreadStart</span><span class="hljs-params">(PTHREAD_START_ROUTINE pfnStartAddr, PVOID pvParam)</span> </span>&#123;<br>    __try &#123;<br>        <span class="hljs-built_in">ExitThread</span>((pfnStartAddr)(pvParam));<br>    &#125;<br><br>    __except(<span class="hljs-built_in">UnhandledExceptionFilter</span>(<span class="hljs-built_in">GetExceptionInformation</span>())) &#123;<br>        <span class="hljs-built_in">ExitProcess</span>(<span class="hljs-built_in">GetExceptionCode</span>());<br>    &#125;<br>    <span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> We never get here.</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>线程完全初始化后，系统将检查调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 时是否传递了 <code>CREATE_SUSPENDED</code> 标志。如果未传递此标志，系统会将线程的挂起计数递减为 <code>0</code>，并且线程可以调度到处理器。然后，系统使用上次保存在线程上下文中的值加载实际的 CPU 寄存器。之后，线程可以执行代码并操作其进程地址空间中的数据。</p>
 <p>由于新线程的 IP 设置为 <code>RtlUserThreadStart</code>，因此该函数实际上是线程开始执行的位置。<code>RtlUserThreadStart</code> 的原型使人认为该函数接收两个参数，且暗示该函数是从另一个函数调用的，但事实并非如此。新线程只是刚刚出现并在此处开始执行。<code>RtlUserThreadStart</code> 可以访问这两个参数，它们是有效的，因为操作系统将值显式写入线程的栈上（这是参数传递给函数的通常方式）。需要注意的是，某些 CPU 架构使用 CPU 寄存器而不是栈来传递参数，对于这些架构，系统会在允许线程执行 <code>RtlUserThreadStart</code> 函数之前，正确地初始化合适的寄存器。</p>
@@ -357,7 +378,7 @@
 <li>当线程函数返回时，<code>RtlUserThreadStart</code> 会调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread"><code>ExitThread</code></a>，并将线程函数的返回值传递给它。线程内核对象的使用计数递减，线程停止执行。</li>
 <li>如果线程引发未处理的异常，则由 <code>RtlUserThreadStart</code> 函数设置的 SEH 框架将处理该异常。通常这意味着向用户显示一个消息框，并且当用户关闭该消息框时，<code>RtlUserThreadStart</code> 将调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess"><code>ExitProcess</code></a> 以终止整个进程，而不仅仅是有问题的线程。</li>
 </ul>
-<h2 id="c-c-运行时库注意事项"><a href="#c-c-运行时库注意事项" class="headerlink" title="C/C++ 运行时库注意事项"></a>C/C++ 运行时库注意事项</h2><p>有四个 native C/C++ 运行时库和两个 managed world of Microsoft .NET 随 Visual Studio 一起提供。请注意，这些库都支持多线程开发：不再有专门设计用于仅面向单线程开发的 C/C++ 库。</p>
+<h2 id="c-x2f-c-运行时库注意事项"><a href="#c-x2f-c-运行时库注意事项" class="headerlink" title="C&#x2F;C++ 运行时库注意事项"></a>C&#x2F;C++ 运行时库注意事项</h2><p>有四个 native C&#x2F;C++ 运行时库和两个 managed world of Microsoft .NET 随 Visual Studio 一起提供。请注意，这些库都支持多线程开发：不再有专门设计用于仅面向单线程开发的 C&#x2F;C++ 库。</p>
 <table>
 <thead>
 <tr>
@@ -383,113 +404,125 @@
 </tr>
 <tr>
 <td align="left">MSVCMRt.lib</td>
-<td align="left">Import library used for mixed managed/native code.</td>
+<td align="left">Import library used for mixed managed&#x2F;native code.</td>
 </tr>
 <tr>
 <td align="left">MSVCURt.lib</td>
 <td align="left">Import library compiled as 100-percent pure MSIL code.</td>
 </tr>
 </tbody></table>
-<p>通过项目的 <strong>属性（Properties） &gt; C/C++ &gt; 代码生成（Code Generation） &gt; 运行时库（Runtime Library）</strong> 可以配置项目所链接到的 C/C++ 运行时库。</p>
-<p>由于标准 C 运行时库是在 1970 年左右发明的，该库的发明者没有考虑将 C 运行时库与多线程应用程序配合使用的问题。如果需要创建线程并且希望使用 C/C++ 运行时库，那么应该使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex"><code>_beginthread</code></a> 而不是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a>。因为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 没有为 C/C++ 运行时库执行一些保障线程安全的处理。</p>
+<p>通过项目的 <strong>属性（Properties） &gt; C&#x2F;C++ &gt; 代码生成（Code Generation） &gt; 运行时库（Runtime Library）</strong> 可以配置项目所链接到的 C&#x2F;C++ 运行时库。</p>
+<p>由于标准 C 运行时库是在 1970 年左右发明的，该库的发明者没有考虑将 C 运行时库与多线程应用程序配合使用的问题。如果需要创建线程并且希望使用 C&#x2F;C++ 运行时库，那么应该使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/beginthread-beginthreadex"><code>_beginthread</code></a> 而不是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a>。因为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createthread"><code>CreateThread</code></a> 没有为 C&#x2F;C++ 运行时库执行一些保障线程安全的处理。</p>
 <blockquote>
-<p>参考：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads">Microsoft Documentation - Windows/Apps/Win32/Desktop Technologies/System Services/Processes and Threads</a>。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads">Microsoft Documentation - Windows&#x2F;Apps&#x2F;Win32&#x2F;Desktop Technologies&#x2F;System Services&#x2F;Processes and Threads</a>。</p>
 </blockquote>
 <h2 id="获取自身的标识"><a href="#获取自身的标识" class="headerlink" title="获取自身的标识"></a>获取自身的标识</h2><p>当线程执行时，它们经常希望调用更改其执行环境的 Windows 函数。例如，线程可能想要更改其优先级（Priority）或其进程的优先级。由于线程更改其（或其进程）环境是很常见的，因此 Windows 提供了一些函数，使线程可以简单地引用其进程内核对象或自己的线程内核对象：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">HANDLE <span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-HANDLE <span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">HANDLE <span class="hljs-title">GetCurrentProcess</span><span class="hljs-params">()</span></span>;<br><span class="hljs-function">HANDLE <span class="hljs-title">GetCurrentThread</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
 
-<p>这两个函数都将返回调用线程的进程/线程内核对象的伪句柄（Pseudo Handle）。这些函数不会在调用进程的句柄表中创建新句柄。此外，调用这些函数不会影响进程/线程内核对象的使用计数。如果调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 并传递伪句柄，那么 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 会简单地返回 <code>FALSE</code>。</p>
+<p>这两个函数都将返回调用线程的进程&#x2F;线程内核对象的伪句柄（Pseudo Handle）。这些函数不会在调用进程的句柄表中创建新句柄。此外，调用这些函数不会影响进程&#x2F;线程内核对象的使用计数。如果调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 并传递伪句柄，那么 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle"><code>CloseHandle</code></a> 会简单地返回 <code>FALSE</code>。</p>
 <p>当调用需要进程或线程句柄的 Windows 函数时，可以传递伪句柄。例如，线程可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes"><code>GetProcessTimes</code></a> 来查询其进程的时间使用情况：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">FILETIME ftCreationTime<span class="token punctuation">,</span> ftExitTime<span class="token punctuation">,</span> ftKernelTime<span class="token punctuation">,</span> ftUserTime<span class="token punctuation">;</span>
-<span class="token function">GetProcessTimes</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftCreationTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftExitTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftKernelTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftUserTime<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp">FILETIME ftCreationTime, ftExitTime, ftKernelTime, ftUserTime;<br><span class="hljs-built_in">GetProcessTimes</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), &amp;ftCreationTime, &amp;ftExitTime, &amp;ftKernelTime, &amp;ftUserTime);<br></code></pre></td></tr></table></figure>
 
-<p>一些 Windows 函数允许通过进程/线程的唯一系统范围（Unique Systemwide）ID 来标识特定进程或线程。以下函数允许线程查询其进程的唯一 ID 或其自己的唯一 ID：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD <span class="token function">GetCurrentProcessId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-DWORD <span class="token function">GetCurrentThreadId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<p>一些 Windows 函数允许通过进程&#x2F;线程的唯一系统范围（Unique Systemwide）ID 来标识特定进程或线程。以下函数允许线程查询其进程的唯一 ID 或其自己的唯一 ID：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">DWORD <span class="hljs-title">GetCurrentProcessId</span><span class="hljs-params">()</span></span>;<br><span class="hljs-function">DWORD <span class="hljs-title">GetCurrentThreadId</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
 
 <h3 id="将伪句柄转换为实句柄"><a href="#将伪句柄转换为实句柄" class="headerlink" title="将伪句柄转换为实句柄"></a>将伪句柄转换为实句柄</h3><p>有时可能需要获取线程的实句柄（Real Handle），而不是伪句柄。“实”的意思是明确地标识唯一线程的句柄。比如如下代码：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD WINAPI <span class="token function">ParentThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    HANDLE hThreadParent <span class="token operator">=</span> <span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">CreateThread</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> ChildThread<span class="token punctuation">,</span> <span class="token punctuation">(</span>PVOID<span class="token punctuation">)</span> hThreadParent<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Function continues...</span>
-<span class="token punctuation">&#125;</span>
-
-DWORD WINAPI <span class="token function">ChildThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    HANDLE hThreadParent <span class="token operator">=</span> <span class="token punctuation">(</span>HANDLE<span class="token punctuation">)</span> pvParam<span class="token punctuation">;</span>
-    FILETIME ftCreationTime<span class="token punctuation">,</span> ftExitTime<span class="token punctuation">,</span> ftKernelTime<span class="token punctuation">,</span> ftUserTime<span class="token punctuation">;</span>
-    <span class="token function">GetThreadTimes</span><span class="token punctuation">(</span>hThreadParent<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftCreationTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftExitTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftKernelTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftUserTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Function continues...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ParentThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    HANDLE hThreadParent = <span class="hljs-built_in">GetCurrentThread</span>();<br>    <span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, ChildThread, (PVOID) hThreadParent, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-comment">// Function continues...</span><br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ChildThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    HANDLE hThreadParent = (HANDLE) pvParam;<br>    FILETIME ftCreationTime, ftExitTime, ftKernelTime, ftUserTime;<br>    <span class="hljs-built_in">GetThreadTimes</span>(hThreadParent, &amp;ftCreationTime, &amp;ftExitTime, &amp;ftKernelTime, &amp;ftUserTime);<br>    <span class="hljs-comment">// Function continues...</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>预期的想法是让父线程将标识父线程的线程句柄传递给子线程。然而父线程传递的是伪句柄，而不是实句柄。当子线程开始执行时，它会将伪句柄传递给 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes"><code>GetThreadTimes</code></a> 函数，这会导致子线程获得自己的 CPU 时间，而不是父线程的 CPU 时间，这是因为线程伪句柄是当前线程的句柄，即伪句柄指代的是正在调用函数的线程。</p>
 <p>要使代码符合预期想法，必须将伪句柄转换为实句柄。可以利用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle"><code>DuplicateHandle</code></a> 函数来完成这件事：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">DWORD WINAPI <span class="token function">ParentThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    HANDLE hThreadParent<span class="token punctuation">;</span>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ParentThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    HANDLE hThreadParent;<br><br>    <span class="hljs-built_in">DuplicateHandle</span>(<br>        <span class="hljs-built_in">GetCurrentProcess</span>(),    <span class="hljs-comment">// Handle of process that thread</span><br>                                <span class="hljs-comment">// pseudohandle is relative to</span><br><br>        <span class="hljs-built_in">GetCurrentThread</span>(),     <span class="hljs-comment">// Parent thread&#x27;s pseudohandle</span><br>        <span class="hljs-built_in">GetCurrentProcess</span>(),    <span class="hljs-comment">// Handle of process that the new, real,</span><br>                                <span class="hljs-comment">// thread handle is relative to</span><br><br>        &amp;hThreadParent,         <span class="hljs-comment">// Will receive the new, real, handle</span><br>                                <span class="hljs-comment">// identifying the parent thread</span><br>        <span class="hljs-number">0</span>,                      <span class="hljs-comment">// Ignored due to DUPLICATE_SAME_ACCESS</span><br>        FALSE,                  <span class="hljs-comment">// New thread handle is not inheritable</span><br>        DUPLICATE_SAME_ACCESS); <span class="hljs-comment">// New thread handle has same</span><br>                                <span class="hljs-comment">// access as pseudohandle</span><br><br>    <span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, ChildThread, (PVOID) hThreadParent, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-comment">// Function continues...</span><br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ChildThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    HANDLE hThreadParent = (HANDLE) pvParam;<br>    FILETIME ftCreationTime, ftExitTime, ftKernelTime, ftUserTime;<br>    <span class="hljs-built_in">GetThreadTimes</span>(hThreadParent, &amp;ftCreationTime, &amp;ftExitTime, &amp;ftKernelTime, &amp;ftUserTime);<br>    <span class="hljs-built_in">CloseHandle</span>(hThreadParent);<br>    <span class="hljs-comment">// Function continues...</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
-    <span class="token function">DuplicateHandle</span><span class="token punctuation">(</span>
-        <span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment">// Handle of process that thread</span>
-                                <span class="token comment">// pseudohandle is relative to</span>
-
-        <span class="token function">GetCurrentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>     <span class="token comment">// Parent thread's pseudohandle</span>
-        <span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment">// Handle of process that the new, real,</span>
-                                <span class="token comment">// thread handle is relative to</span>
-
-        <span class="token operator">&amp;</span>hThreadParent<span class="token punctuation">,</span>         <span class="token comment">// Will receive the new, real, handle</span>
-                                <span class="token comment">// identifying the parent thread</span>
-        <span class="token number">0</span><span class="token punctuation">,</span>                      <span class="token comment">// Ignored due to DUPLICATE_SAME_ACCESS</span>
-        FALSE<span class="token punctuation">,</span>                  <span class="token comment">// New thread handle is not inheritable</span>
-        DUPLICATE_SAME_ACCESS<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// New thread handle has same</span>
-                                <span class="token comment">// access as pseudohandle</span>
-
-    <span class="token function">CreateThread</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> ChildThread<span class="token punctuation">,</span> <span class="token punctuation">(</span>PVOID<span class="token punctuation">)</span> hThreadParent<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Function continues...</span>
-<span class="token punctuation">&#125;</span>
-
-DWORD WINAPI <span class="token function">ChildThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    HANDLE hThreadParent <span class="token operator">=</span> <span class="token punctuation">(</span>HANDLE<span class="token punctuation">)</span> pvParam<span class="token punctuation">;</span>
-    FILETIME ftCreationTime<span class="token punctuation">,</span> ftExitTime<span class="token punctuation">,</span> ftKernelTime<span class="token punctuation">,</span> ftUserTime<span class="token punctuation">;</span>
-    <span class="token function">GetThreadTimes</span><span class="token punctuation">(</span>hThreadParent<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftCreationTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftExitTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftKernelTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ftUserTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>hThreadParent<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// Function continues...</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
+      
+        <a href="/tags/Windows/">#Windows</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Windows via C/C++, 5th Edition - Thread Basics</div>
+      <div>https://dsyx.github.io/2022/02/14/windows-via-c-cpp-5th-thread-basics/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yaoxing Shan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
               
-              
-                <div class="post-prevnext">
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/">
+                      <a href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/" title="Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities</span>
                         <span class="visible-mobile">上一篇</span>
@@ -499,7 +532,7 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/02/14/windows-via-c-cpp-5th-jobs/">
+                      <a href="/2022/02/14/windows-via-c-cpp-5th-jobs/" title="Windows via C/C++, 5th Edition - Jobs">
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Jobs</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -511,16 +544,12 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments" lazyload>
-                
-                  
-                
-                
+  <article id="comments" lazyload>
+    
   <div id="valine"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#valine', function() {
-      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.17/Valine.min.js', function() {
         var options = Object.assign(
           {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
           {
@@ -530,7 +559,9 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
         )
         new Valine(options);
         Fluid.utils.waitElementVisible('#valine .vcontent', () => {
-          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
         })
       });
     });
@@ -538,25 +569,57 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
   <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+  </article>
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
   <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
@@ -581,60 +644,62 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            PV: 
-            <span id="leancloud-site-pv"></span>
-            
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            UV: 
-            <span id="leancloud-site-uv"></span>
-            
-          </span>
-      
-
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
 
-
-  <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -645,15 +710,27 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
 
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
-  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -663,73 +740,90 @@ DWORD WINAPI <span class="token function">ChildThread</span><span class="token p
 
 
 
-  
-    
-  
-
-
 
   
-    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
-  
-  
-    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
-  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-        typing(title);
-      
-    })(window, document);
-  </script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

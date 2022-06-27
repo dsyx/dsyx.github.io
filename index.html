@@ -29,15 +29,19 @@
 <meta name="twitter:card" content="summary_large_image">
   
   
+  
   <title>Yaoxing Shan</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
 
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
@@ -46,25 +50,59 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
 
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-<link rel="stylesheet" href="/css/fluid_custom.css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 6.0.0"></head>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
 
 
 <body>
-  <header style="height: 100vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
       <strong>Yaoxing Shan</strong>
@@ -146,6 +184,7 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -158,34 +197,40 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="return 0;">
-              
-            </span>
+  
 
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
           
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
+            <span id="subtitle" data-typed-text="return 0;"></span>
           
         </div>
+
+        
       </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
     
       <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          style=margin-top:0>
+        <div id="board"
+          style="margin-top: 0">
           
           <div class="container">
             <div class="row">
@@ -204,12 +249,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/05/25/imx-rt1060-manufacturing-users-guide/" target="_self">
-          
-          Document identifier: IMXRT1060MFUUGRev. 3, 29 June 2020   1 引言该文档描述了 i.MX RT 设备的可引导映像的生成。还说明了 i.MX RT BootROM 和 MCUBOOT-based Flashloader 的交互过程，以及将可引导映像编程到外部闪存中的过程，外部闪存可以是：  QuadSPI NOR &#x2F; Octal Flas
-        </a>
-      </p>
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/05/25/imx-rt1060-manufacturing-users-guide/" target="_self">
+        <div>
+          Document identifier: IMXRT1060MFUUGRev. 3, 29 June 2020   1 引言该文档描述了 i.MX RT 设备的可引导映像的生成。还说明了 i.MX RT BootROM 和 MCUBOOT-based Flashloader 的交互过程，以及将可引导映像编程到外部闪存中的过程，外部闪存可以是：  QuadSPI NOR &#x2F; Octal
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -221,22 +266,36 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/Translation/">Translation</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Translation/" class="category-chain-item">Translation</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Embedded/">Embedded</a>
+              <a href="/tags/Embedded/">#Embedded</a>
             
-              <a href="/tags/i-MX-RT1060/">i.MX RT1060</a>
+              <a href="/tags/i-MX-RT1060/">#i.MX RT1060</a>
             
-              <a href="/tags/NXP/">NXP</a>
+              <a href="/tags/NXP/">#NXP</a>
             
           </div>
         
@@ -255,12 +314,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/03/17/vscode-embedded-project-setup/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/03/17/vscode-embedded-project-setup/" target="_self">
+        <div>
           现今，每家嵌入式芯片厂商基本上都推出了自家的 Eclipse-based IDE 以方便开发者进行快速开发，如 ST 的 STM32CubeIDE、NXP 的 MCUXpresso IDE。 然而，Eclipse 的编辑功能个人认为并不好用，并且这些 Eclipse-based IDE 运行得并不流畅。因此，我决定自己搭建一个开发环境来替代这些 Eclipse-based IDE。本文以 ST 方
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -272,22 +331,36 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/VSCode/">VSCode</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/VSCode/" class="category-chain-item">VSCode</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/VSCode/">VSCode</a>
+              <a href="/tags/VSCode/">#VSCode</a>
             
-              <a href="/tags/Embedded/">Embedded</a>
+              <a href="/tags/Embedded/">#Embedded</a>
             
-              <a href="/tags/STM32CubeMX/">STM32CubeMX</a>
+              <a href="/tags/STM32CubeMX/">#STM32CubeMX</a>
             
           </div>
         
@@ -306,12 +379,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/03/03/windows-via-c-cpp-5th-fibers/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/03/03/windows-via-c-cpp-5th-fibers/" target="_self">
+        <div>
           Microsoft 为 Windows 添加了一种由应用程序手动调度的执行单元 —— 纤程（Fiber）。 Windows 内核中实现了线程，线程是操作系统可见的执行单元，系统将根据 Microsoft 定义的算法调度它们。纤程是在用户模式代码中实现的，因此它们对于系统来说是不可见的，并且应用程序必须定义自己的算法来调度它们。 单个线程可以包含一个或多个纤程。就内核而言，线程是抢占调度的，并且它正
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -323,20 +396,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -355,12 +442,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/03/03/windows-via-c-cpp-5th-the-windows-thread-pool/" target="_self">
-          
-          每个人对如何管理线程的创建和销毁都有自己不同的看法。Windows 提供了一个 线程池 机制（围绕 IOCP 构建），使得开发者可以更容易地管理线程的创建和销毁。这个新的通用线程池不一定适用于所有情况，但它通常表现得足够好，并且可以为您节省大量的开发时间。 新的线程池函数允许您：  异步地调用函数 定时地调用函数 当单个内核对象已示意时调用函数 当异步 I&#x2F;O 请求完成时调用函数   注：Micr
-        </a>
-      </p>
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/03/03/windows-via-c-cpp-5th-the-windows-thread-pool/" target="_self">
+        <div>
+          每个人对如何管理线程的创建和销毁都有自己不同的看法。Windows 提供了一个 线程池 机制（围绕 IOCP 构建），使得开发者可以更容易地管理线程的创建和销毁。这个新的通用线程池不一定适用于所有情况，但它通常表现得足够好，并且可以为您节省大量的开发时间。 新的线程池函数允许您：  异步地调用函数 定时地调用函数 当单个内核对象已示意时调用函数 当异步 I&#x2F;O 请求完成时调用函数   注
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -372,20 +459,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -404,12 +505,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/28/windows-via-c-cpp-5th-synchronous-and-asynchronous-device-io/" target="_self">
-          
-          在 Microsoft Windows 应用程序中，线程是用于分割工作的最佳工具。每个线程被分配给一个处理器，这允许多处理器计算机同时执行多个操作，从而提高吞吐量。当线程发出同步设备 I&#x2F;O 请求时，该线程将暂时挂起，直到设备完成 I&#x2F;O 请求。这种挂起会降低线程的性能，因为线程无法执行有用的工作（如启动另一个客户端的处理请求）。简而言之，您希望始终保持线程执行有用的工作，并避免它们被阻塞。 为了
-        </a>
-      </p>
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/28/windows-via-c-cpp-5th-synchronous-and-asynchronous-device-io/" target="_self">
+        <div>
+          在 Microsoft Windows 应用程序中，线程是用于分割工作的最佳工具。每个线程被分配给一个处理器，这允许多处理器计算机同时执行多个操作，从而提高吞吐量。当线程发出同步设备 I&#x2F;O 请求时，该线程将暂时挂起，直到设备完成 I&#x2F;O 请求。这种挂起会降低线程的性能，因为线程无法执行有用的工作（如启动另一个客户端的处理请求）。简而言之，您希望始终保持线程执行有用的工作，并避
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -421,20 +522,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -453,12 +568,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/23/windows-via-c-cpp-5th-thread-synchronization-with-kernel-objects/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/23/windows-via-c-cpp-5th-thread-synchronization-with-kernel-objects/" target="_self">
+        <div>
           用户模式同步的优点在于它非常的快，如果需要强调线程的性能，那么应该首先考虑使用用户模式线程同步机制。尽管用户模式线程同步机制提供了出色的性能，但它们都有一些局限性（如互锁的函数族仅对单个值进行操作）。实际上，内核对象机制比用户模式机制更通用，唯一的不足是性能不如用户模式机制。使用内核对象机制时，调用线程必须从用户模式切换到内核模式，这种切换开销很大（在 x86 平台上，一个空系统调用大约需要 20
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -470,20 +585,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -502,12 +631,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/18/windows-via-c-cpp-5th-thread-synchronization-in-user-mode/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/18/windows-via-c-cpp-5th-thread-synchronization-in-user-mode/" target="_self">
+        <div>
           线程需要如下两种情况下进行同步：  当有多个线程访问共享资源而不使资源被破坏时。 当一个线程需要通知一个或多个其他线程特定任务已完成时。  原子访问线程同步的很大一部分与原子访问（Atomic Access）相关，即线程访问一个资源并保证没有其他线程同时访问同一资源的能力。 Windows 提供了互锁（Interlocked）函数族，这些函数允许以原子操作方式对一个值进行操作，如 Interloc
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -519,20 +648,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -551,12 +694,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/" target="_self">
+        <div>
           抢占式操作系统必须使用某种算法来确定线程应该何时调度以及运行多长时间。每个线程都有一个在线程内核对象中维护的上下文结构。此上下文结构反映线程上次执行时线程的 CPU 寄存器的状态。每隔 20 ms 左右，Windows 会查看当前存在的所有线程内核对象，选择一个可调度的线程内核对象，并使用上次保存在线程上下文中的值加载 CPU 的寄存器。此操作称为 上下文切换（Context Switch） 。
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -568,20 +711,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -600,12 +757,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/14/windows-via-c-cpp-5th-thread-basics/" target="_self">
-          
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/14/windows-via-c-cpp-5th-thread-basics/" target="_self">
+        <div>
           线程（Thread）描述了进程（Process）中的执行路径，由两部分组成：  一个被操作系统用来管理线程的内核对象。这个内核对象也是系统用来存放关于线程的统计信息的地方。 一个用来维护线程执行代码时所需的所有函数参数和局部变量的线程栈（Thread Stack）。  进程是惰性的，它从不执行任何操作，仅仅是线程的容器。线程总是在某个进程的上下文（context）中创建，并在该进程中度过它们的整个
-        </a>
-      </p>
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -617,20 +774,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -649,12 +820,12 @@
         </a>
       </h1>
 
-      <p class="index-excerpt">
-        <a href="/2022/02/14/windows-via-c-cpp-5th-jobs/" target="_self">
-          
-          Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： void
-        </a>
-      </p>
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/02/14/windows-via-c-cpp-5th-jobs/" target="_self">
+        <div>
+          Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： 1234
+        </div>
+      </a>
 
       <div class="index-btm post-metas">
         
@@ -666,20 +837,34 @@
           </div>
         
         
-          <div class="post-meta mr-3">
+          <div class="post-meta mr-3 d-flex align-items-center">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/My-Notes/">My Notes</a>
-            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
           </div>
         
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Windows/">Windows</a>
+              <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
             
-              <a href="/tags/Windows-via-C-C/">Windows via C/C++</a>
+              <a href="/tags/Windows/">#Windows</a>
             
           </div>
         
@@ -724,60 +909,62 @@
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            PV: 
-            <span id="leancloud-site-pv"></span>
-            
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            UV: 
-            <span id="leancloud-site-uv"></span>
-            
-          </span>
-      
-
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
 
-
-  <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -788,15 +975,27 @@
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
 
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
-  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -806,60 +1005,24 @@
 
 
 
-  
-    
-  
-
-
-
-
-
 
   <script defer src="/js/leancloud.js" ></script>
 
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-        typing(title);
-      
-    })(window, document);
-  </script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

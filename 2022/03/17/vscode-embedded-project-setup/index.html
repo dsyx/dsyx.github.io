@@ -41,38 +41,25 @@
 <meta name="twitter:image" content="https://i.postimg.cc/FH3mm8FR/debug-mode-and-configuration.png">
   
   
+  
   <title>VSCode 嵌入式项目设置 - Yaoxing Shan</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
-  
-    
-    
-      
-      
-        
-          
-        
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
-      
-      
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
-      
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
@@ -81,25 +68,59 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
 
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-<link rel="stylesheet" href="/css/fluid_custom.css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 6.0.0"></head>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
       <strong>Yaoxing Shan</strong>
@@ -181,6 +202,7 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -193,65 +215,77 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="VSCode 嵌入式项目设置">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-17 09:21" pubdate>
-        2022/03/17
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      3.9k 字
-    </span>
   
 
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      33 分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
-      </span>
-    
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="VSCode 嵌入式项目设置"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-17 09:21" pubdate>
+          2022/03/17
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
@@ -260,16 +294,22 @@
 
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
     <div class="col-lg-8 nopadding-x-md">
       <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
+        <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">VSCode 嵌入式项目设置</h1>
             
-            <div class="markdown-body">
-              <p>现今，每家嵌入式芯片厂商基本上都推出了自家的 Eclipse-based IDE 以方便开发者进行快速开发，如 <a target="_blank" rel="noopener" href="https://www.st.com/">ST</a> 的 <a target="_blank" rel="noopener" href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE</a>、<a target="_blank" rel="noopener" href="https://www.nxp.com/">NXP</a> 的 <a target="_blank" rel="noopener" href="https://www.nxp.com/design/software/development-software/mcuxpresso-software-and-tools-/mcuxpresso-integrated-development-environment-ide:MCUXpresso-IDE">MCUXpresso IDE</a>。</p>
+            
+              <div class="markdown-body">
+                
+                <p>现今，每家嵌入式芯片厂商基本上都推出了自家的 Eclipse-based IDE 以方便开发者进行快速开发，如 <a target="_blank" rel="noopener" href="https://www.st.com/">ST</a> 的 <a target="_blank" rel="noopener" href="https://www.st.com/en/development-tools/stm32cubeide.html">STM32CubeIDE</a>、<a target="_blank" rel="noopener" href="https://www.nxp.com/">NXP</a> 的 <a target="_blank" rel="noopener" href="https://www.nxp.com/design/software/development-software/mcuxpresso-software-and-tools-/mcuxpresso-integrated-development-environment-ide:MCUXpresso-IDE">MCUXpresso IDE</a>。</p>
 <p>然而，Eclipse 的编辑功能个人认为并不好用，并且这些 Eclipse-based IDE 运行得并不流畅。因此，我决定自己搭建一个开发环境来替代这些 Eclipse-based IDE。本文以 ST 方案为例，因为我的机器上正好有 <a target="_blank" rel="noopener" href="https://www.st.com/en/development-tools/stm32cubemx.html">STM32CubeMX</a>。</p>
 <h2 id="先决条件"><a href="#先决条件" class="headerlink" title="先决条件"></a>先决条件</h2><p>假定已安装了如下软件：</p>
 <ul>
@@ -286,170 +326,42 @@
 </blockquote>
 <h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h2><p>使用 <a target="_blank" rel="noopener" href="https://www.st.com/en/development-tools/stm32cubemx.html">STM32CubeMX</a> 创建一个新项目，配置好你板子上的外设及时钟，确保启用了调试功能（根据实际选择调试方式）：</p>
 <p><img src="https://i.postimg.cc/FH3mm8FR/debug-mode-and-configuration.png" srcset="/img/loading.gif" lazyload></p>
-<p>在 <strong>Project Manager</strong> 页下命名项目，并将 <strong>Toolchain/IDE</strong> 改为 <strong>Makefile</strong>：</p>
+<p>在 <strong>Project Manager</strong> 页下命名项目，并将 <strong>Toolchain&#x2F;IDE</strong> 改为 <strong>Makefile</strong>：</p>
 <p><img src="https://i.postimg.cc/28qr93Pn/project-manager.png" srcset="/img/loading.gif" lazyload></p>
 <p>点击 <strong>GENERATE CODE</strong> 以生成项目。项目的目录结构应该如下：</p>
-<div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ tree -aCL <span class="token number">2</span> <span class="token builtin class-name">.</span>
-<span class="token builtin class-name">.</span>
-├── .mxproject
-├── Core
-│   ├── Inc
-│   └── Src
-├── Drivers
-│   ├── CMSIS
-│   └── STM32H7xx_HAL_Driver
-├── Makefile
-├── STM32H743IITx_FLASH.ld
-├── led-demo.ioc
-└── startup_stm32h743xx.s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tree -aCL 2 .<br>.<br>├── .mxproject<br>├── Core<br>│   ├── Inc<br>│   └── Src<br>├── Drivers<br>│   ├── CMSIS<br>│   └── STM32H7xx_HAL_Driver<br>├── Makefile<br>├── STM32H743IITx_FLASH.ld<br>├── led-demo.ioc<br>└── startup_stm32h743xx.s<br></code></pre></td></tr></table></figure>
 
 <h2 id="安装-vscode-插件"><a href="#安装-vscode-插件" class="headerlink" title="安装 VSCode 插件"></a>安装 VSCode 插件</h2><p>使用 VSCode 打开生成的项目目录（示例中为 <code>C:\workspace\led-demo</code>）。点击左侧栏中的扩展，搜索并安装以下插件：</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C/C++</a> —— 用于 C/C++ 的智能提示、调试和代码查阅。</li>
+<li><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools">C&#x2F;C++</a> —— 用于 C&#x2F;C++ 的智能提示、调试和代码查阅。</li>
 <li><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-embedded-tools">Embedded Tools</a> —— 用于调试嵌入式设备时查看其寄存器及 RTOS 数据。</li>
 </ul>
 <p><img src="https://i.postimg.cc/J7sXP2Fd/vscode-plugin-embedded-tools.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="配置项目"><a href="#配置项目" class="headerlink" title="配置项目"></a>配置项目</h2><p>在项目的根目录下创建 <code>.vscode</code> 目录，该目录用于存放工作区设置。此时，项目的目录结构应该如下：</p>
-<div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ tree -aCL <span class="token number">1</span> <span class="token builtin class-name">.</span>
-<span class="token builtin class-name">.</span>
-├── .mxproject
-├── .vscode
-├── Core
-├── Drivers
-├── Makefile
-├── STM32H743IITx_FLASH.ld
-├── led-demo.ioc
-└── startup_stm32h743xx.s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tree -aCL 1 .<br>.<br>├── .mxproject<br>├── .vscode<br>├── Core<br>├── Drivers<br>├── Makefile<br>├── STM32H743IITx_FLASH.ld<br>├── led-demo.ioc<br>└── startup_stm32h743xx.s<br></code></pre></td></tr></table></figure>
 
 <h3 id="添加-cmsis-svd-文件"><a href="#添加-cmsis-svd-文件" class="headerlink" title="添加 CMSIS-SVD 文件"></a>添加 CMSIS-SVD 文件</h3><p><a target="_blank" rel="noopener" href="https://www.keil.com/pack/doc/CMSIS/SVD/html/index.html">CMSIS-SVD</a> 文件用于描述 Arm Cortex-M 芯片的详细系统信息，主要是外设的内存映射寄存器。目前没有一个用于统一存储所有 Arm Cortex-M 芯片的 CMSIS-SVD 文件的仓库。但是有一个可用的 Github 仓库，其存储了大量的 CMSIS-SVD 文件：<a target="_blank" rel="noopener" href="https://github.com/posborne/cmsis-svd">https://github.com/posborne/cmsis-svd</a>，你可以按需下载。</p>
 <p>将需要的 CMSIS-SVD 文件保存到项目的根目录下，如本示例（<code>STM32H743x.svd</code>）：</p>
-<div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ tree -aCL <span class="token number">1</span> <span class="token builtin class-name">.</span>
-<span class="token builtin class-name">.</span>
-├── .mxproject
-├── .vscode
-├── Core
-├── Drivers
-├── Makefile
-├── STM32H743IITx_FLASH.ld
-├── STM32H743x.svd
-├── led-demo.ioc
-└── startup_stm32h743xx.s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tree -aCL 1 .<br>.<br>├── .mxproject<br>├── .vscode<br>├── Core<br>├── Drivers<br>├── Makefile<br>├── STM32H743IITx_FLASH.ld<br>├── STM32H743x.svd<br>├── led-demo.ioc<br>└── startup_stm32h743xx.s<br></code></pre></td></tr></table></figure>
 
 <h3 id="添加-j-link-命令文件"><a href="#添加-j-link-命令文件" class="headerlink" title="添加 J-Link 命令文件"></a>添加 J-Link 命令文件</h3><p><a target="_blank" rel="noopener" href="https://wiki.segger.com/J-Link_Commander">J-Link Commander</a> 可以使用 <a target="_blank" rel="noopener" href="https://wiki.segger.com/J-Link_Commander#Using_J-Link_Command_Files">J-Link 命令文件</a> 以在批处理模式下执行烧写固件任务。在项目的根目录下创建文件 <code>flash.jlink</code>，并根据实际情况填写如下内容：</p>
-<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">r
-h
-loadfile build&#x2F;led-demo.hex
-q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs maxima">r<br>h<br><span class="hljs-built_in">loadfile</span> build/led-<span class="hljs-built_in">demo</span>.hex<br>q<br></code></pre></td></tr></table></figure>
 
 <h3 id="添加-gdbinit-文件"><a href="#添加-gdbinit-文件" class="headerlink" title="添加 gdbinit 文件"></a>添加 gdbinit 文件</h3><p>在项目的根目录下创建文件 <code>reset.gdb</code>，并填写如下内容：</p>
-<div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">reset<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">reset</span><br></code></pre></td></tr></table></figure>
 
 <p><a target="_blank" rel="noopener" href="https://wiki.segger.com/J-Link_GDB_Server#reset"><code>reset</code></a> 命令用于重置并停止目标 CPU。确保在使用此命令之前选择设备以使用正确的复位策略。</p>
 <h3 id="添加调试设置文件"><a href="#添加调试设置文件" class="headerlink" title="添加调试设置文件"></a>添加调试设置文件</h3><p>在 <code>.vscode</code> 目录下创建 <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/editor/debugging"><code>launch.json</code></a> 文件，并根据实际情况填写如下内容，该文件用于自定义工作区的运行和调试：</p>
-<div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-    <span class="token property">"configurations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Build, Flash and Debug"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"cppdbg"</span><span class="token punctuation">,</span>
-            <span class="token property">"request"</span><span class="token operator">:</span> <span class="token string">"launch"</span><span class="token punctuation">,</span>
-            <span class="token property">"cwd"</span><span class="token operator">:</span> <span class="token string">"$&#123;workspaceFolder&#125;"</span><span class="token punctuation">,</span>
-            <span class="token property">"program"</span><span class="token operator">:</span> <span class="token string">"$&#123;workspaceFolder&#125;/build/led-demo.elf"</span><span class="token punctuation">,</span>
-            <span class="token property">"stopAtEntry"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-            <span class="token property">"MIMode"</span><span class="token operator">:</span> <span class="token string">"gdb"</span><span class="token punctuation">,</span>
-            <span class="token property">"miDebuggerPath"</span><span class="token operator">:</span> <span class="token string">"C:/gcc-arm-none-eabi/bin/arm-none-eabi-gdb.exe"</span><span class="token punctuation">,</span>
-            <span class="token property">"miDebuggerServerAddress"</span><span class="token operator">:</span> <span class="token string">"localhost:2331"</span><span class="token punctuation">,</span>
-            <span class="token property">"debugServerPath"</span><span class="token operator">:</span> <span class="token string">"C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe"</span><span class="token punctuation">,</span>
-            <span class="token property">"debugServerArgs"</span><span class="token operator">:</span> <span class="token string">"-if swd -speed 4000 -endian little -device STM32H743II -x $&#123;workspaceFolder&#125;/reset.gdb"</span><span class="token punctuation">,</span>
-            <span class="token property">"svdPath"</span><span class="token operator">:</span> <span class="token string">"$&#123;workspaceFolder&#125;/STM32H743x.svd"</span><span class="token punctuation">,</span>
-            <span class="token property">"preLaunchTask"</span><span class="token operator">:</span> <span class="token string">"Build and Flash"</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">]</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;configurations&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Build, Flash and Debug&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cppdbg&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;request&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;launch&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;cwd&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;program&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/build/led-demo.elf&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;stopAtEntry&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;MIMode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gdb&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;miDebuggerPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C:/gcc-arm-none-eabi/bin/arm-none-eabi-gdb.exe&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;miDebuggerServerAddress&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;localhost:2331&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;debugServerPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C:/Program Files/SEGGER/JLink/JLinkGDBServerCL.exe&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;debugServerArgs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;-if swd -speed 4000 -endian little -device STM32H743II -x $&#123;workspaceFolder&#125;/reset.gdb&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;svdPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/STM32H743x.svd&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;preLaunchTask&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Build and Flash&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="添加任务设置文件"><a href="#添加任务设置文件" class="headerlink" title="添加任务设置文件"></a>添加任务设置文件</h3><p>在 <code>.vscode</code> 目录下创建 <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/editor/tasks"><code>tasks.json</code></a> 文件，并根据实际情况填写如下内容，该文件用于定义工作区的任务：</p>
-<div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-    <span class="token property">"version"</span><span class="token operator">:</span> <span class="token string">"2.0.0"</span><span class="token punctuation">,</span>
-    <span class="token property">"tasks"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Build"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"shell"</span><span class="token punctuation">,</span>
-            <span class="token property">"command"</span><span class="token operator">:</span> <span class="token string">"C:/msys64/usr/bin/make.exe"</span><span class="token punctuation">,</span>
-            <span class="token property">"group"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-                <span class="token property">"kind"</span><span class="token operator">:</span> <span class="token string">"build"</span><span class="token punctuation">,</span>
-                <span class="token property">"isDefault"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Build and Flash"</span><span class="token punctuation">,</span>
-            <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"shell"</span><span class="token punctuation">,</span>
-            <span class="token property">"command"</span><span class="token operator">:</span> <span class="token string">"C:/Program Files/SEGGER/JLink/JLink.exe"</span><span class="token punctuation">,</span>
-            <span class="token property">"args"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-                <span class="token string">"-Device"</span><span class="token punctuation">,</span>
-                <span class="token string">"STM32H743II"</span><span class="token punctuation">,</span>
-                <span class="token string">"-If"</span><span class="token punctuation">,</span>
-                <span class="token string">"SWD"</span><span class="token punctuation">,</span>
-                <span class="token string">"-Speed"</span><span class="token punctuation">,</span>
-                <span class="token string">"4000"</span><span class="token punctuation">,</span>
-                <span class="token string">"-AutoConnect"</span><span class="token punctuation">,</span>
-                <span class="token string">"1"</span><span class="token punctuation">,</span>
-                <span class="token string">"-CommandFile"</span><span class="token punctuation">,</span>
-                <span class="token string">"flash.jlink"</span>
-            <span class="token punctuation">]</span><span class="token punctuation">,</span>
-            <span class="token property">"dependsOn"</span><span class="token operator">:</span> <span class="token string">"Build"</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">]</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2.0.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;tasks&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Build&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;shell&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C:/msys64/usr/bin/make.exe&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;group&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>                <span class="hljs-attr">&quot;kind&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;build&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-attr">&quot;isDefault&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><br>            <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Build and Flash&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;shell&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;command&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C:/Program Files/SEGGER/JLink/JLink.exe&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;args&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-string">&quot;-Device&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;STM32H743II&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;-If&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;SWD&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;-Speed&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;4000&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;-AutoConnect&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;-CommandFile&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;flash.jlink&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;dependsOn&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Build&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="添加-c-c-设置文件"><a href="#添加-c-c-设置文件" class="headerlink" title="添加 C/C++ 设置文件"></a>添加 C/C++ 设置文件</h3><p>在 <code>.vscode</code> 目录下创建 <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/cpp/customize-default-settings-cpp"><code>c_cpp_properties.json</code></a> 文件，并根据实际情况填写如下内容，该文件用于配置工作区的 C/C++ 插件设置：</p>
-<div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-    <span class="token property">"configurations"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Win32"</span><span class="token punctuation">,</span>
-            <span class="token property">"includePath"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-                <span class="token comment">// 可以使用如下匹配进行目录递归，这将包含工作区的所有目录：</span>
-                <span class="token comment">//"$&#123;workspaceFolder&#125;/**"</span>
-
-                <span class="token comment">// 单独列出路径可能性能更佳（猜测！）</span>
-                <span class="token string">"$&#123;workspaceFolder&#125;/Core/Inc"</span><span class="token punctuation">,</span>
-                <span class="token string">"$&#123;workspaceFolder&#125;/Drivers/STM32H7xx_HAL_Driver/Inc"</span><span class="token punctuation">,</span>
-                <span class="token string">"$&#123;workspaceFolder&#125;/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy"</span><span class="token punctuation">,</span>
-                <span class="token string">"$&#123;workspaceFolder&#125;/Drivers/CMSIS/Include"</span><span class="token punctuation">,</span>
-                <span class="token string">"$&#123;workspaceFolder&#125;/Drivers/CMSIS/Device/ST/STM32H7xx/Include"</span>
-            <span class="token punctuation">]</span><span class="token punctuation">,</span>
-            <span class="token property">"defines"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-                <span class="token string">"USE_HAL_DRIVER"</span><span class="token punctuation">,</span>
-                <span class="token string">"STM32H743xx"</span>
-            <span class="token punctuation">]</span><span class="token punctuation">,</span>
-            <span class="token property">"compilerPath"</span><span class="token operator">:</span> <span class="token string">"C:/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe"</span><span class="token punctuation">,</span>
-            <span class="token property">"cStandard"</span><span class="token operator">:</span> <span class="token string">"c11"</span><span class="token punctuation">,</span>
-            <span class="token property">"cppStandard"</span><span class="token operator">:</span> <span class="token string">"c++11"</span><span class="token punctuation">,</span>
-            <span class="token property">"intelliSenseMode"</span><span class="token operator">:</span> <span class="token string">"gcc-arm"</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">]</span><span class="token punctuation">,</span>
-    <span class="token property">"version"</span><span class="token operator">:</span> <span class="token number">4</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<h3 id="添加-c-x2f-c-设置文件"><a href="#添加-c-x2f-c-设置文件" class="headerlink" title="添加 C&#x2F;C++ 设置文件"></a>添加 C&#x2F;C++ 设置文件</h3><p>在 <code>.vscode</code> 目录下创建 <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/cpp/customize-default-settings-cpp"><code>c_cpp_properties.json</code></a> 文件，并根据实际情况填写如下内容，该文件用于配置工作区的 C&#x2F;C++ 插件设置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;configurations&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Win32&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;includePath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-comment">// 可以使用如下匹配进行目录递归，这将包含工作区的所有目录：</span><br>                <span class="hljs-comment">//&quot;$&#123;workspaceFolder&#125;/**&quot;</span><br><br>                <span class="hljs-comment">// 单独列出路径可能性能更佳（猜测！）</span><br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/Core/Inc&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/Drivers/STM32H7xx_HAL_Driver/Inc&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/Drivers/STM32H7xx_HAL_Driver/Inc/Legacy&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/Drivers/CMSIS/Include&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;$&#123;workspaceFolder&#125;/Drivers/CMSIS/Device/ST/STM32H7xx/Include&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;defines&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>                <span class="hljs-string">&quot;USE_HAL_DRIVER&quot;</span><span class="hljs-punctuation">,</span><br>                <span class="hljs-string">&quot;STM32H743xx&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;compilerPath&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;C:/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;cStandard&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;c11&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;cppStandard&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;c++11&quot;</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;intelliSenseMode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gcc-arm&quot;</span><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
 
 <h2 id="调试项目"><a href="#调试项目" class="headerlink" title="调试项目"></a>调试项目</h2><p>现在，项目的目录结构应该如下：</p>
-<div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ tree -aCL <span class="token number">2</span> <span class="token builtin class-name">.</span>
-<span class="token builtin class-name">.</span>
-├── .mxproject
-├── .vscode
-│   ├── c_cpp_properties.json
-│   ├── launch.json
-│   └── tasks.json
-├── Core
-│   ├── Inc
-│   └── Src
-├── Drivers
-│   ├── CMSIS
-│   └── STM32H7xx_HAL_Driver
-├── Makefile
-├── STM32H743IITx_FLASH.ld
-├── STM32H743x.svd
-├── flash.jlink
-├── led-demo.ioc
-├── reset.gdb
-└── startup_stm32h743xx.s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ tree -aCL 2 .<br>.<br>├── .mxproject<br>├── .vscode<br>│   ├── c_cpp_properties.json<br>│   ├── launch.json<br>│   └── tasks.json<br>├── Core<br>│   ├── Inc<br>│   └── Src<br>├── Drivers<br>│   ├── CMSIS<br>│   └── STM32H7xx_HAL_Driver<br>├── Makefile<br>├── STM32H743IITx_FLASH.ld<br>├── STM32H743x.svd<br>├── flash.jlink<br>├── led-demo.ioc<br>├── reset.gdb<br>└── startup_stm32h743xx.s<br></code></pre></td></tr></table></figure>
 
 <p>点击 VSCode 左侧栏的调试，并点击调试按钮：</p>
 <p><img src="https://i.postimg.cc/28413ZVm/debug.png" srcset="/img/loading.gif" lazyload></p>
@@ -458,46 +370,100 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
 <p>你可以通过点击源文件的行号左侧以设置断点，也可以观察程序暂停时的变量值、寄存器及调用栈：</p>
 <p><img src="https://i.postimg.cc/GmK9xnF5/pause-debugging.png" srcset="/img/loading.gif" lazyload></p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/VSCode/">VSCode</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/VSCode/">VSCode</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Embedded/">Embedded</a>
-                    
-                      <a class="hover-with-bg" href="/tags/STM32CubeMX/">STM32CubeMX</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/VSCode/" class="category-chain-item">VSCode</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/VSCode/">#VSCode</a>
+      
+        <a href="/tags/Embedded/">#Embedded</a>
+      
+        <a href="/tags/STM32CubeMX/">#STM32CubeMX</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>VSCode 嵌入式项目设置</div>
+      <div>https://dsyx.github.io/2022/03/17/vscode-embedded-project-setup/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yaoxing Shan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年3月17日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
               
-              
-                <div class="post-prevnext">
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/05/25/imx-rt1060-manufacturing-users-guide/">
+                      <a href="/2022/05/25/imx-rt1060-manufacturing-users-guide/" title="i.MX RT1060 Manufacturing User&#39;s Guide">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">i.MX RT1060 Manufacturing User's Guide</span>
+                        <span class="hidden-mobile">i.MX RT1060 Manufacturing User&#39;s Guide</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -505,7 +471,7 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/03/03/windows-via-c-cpp-5th-fibers/">
+                      <a href="/2022/03/03/windows-via-c-cpp-5th-fibers/" title="Windows via C/C++, 5th Edition - Fibers">
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Fibers</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -517,16 +483,12 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments" lazyload>
-                
-                  
-                
-                
+  <article id="comments" lazyload>
+    
   <div id="valine"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#valine', function() {
-      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.17/Valine.min.js', function() {
         var options = Object.assign(
           {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
           {
@@ -536,7 +498,9 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
         )
         new Valine(options);
         Fluid.utils.waitElementVisible('#valine .vcontent', () => {
-          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
         })
       });
     });
@@ -544,25 +508,57 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
   <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+  </article>
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
   <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
@@ -587,60 +583,62 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            PV: 
-            <span id="leancloud-site-pv"></span>
-            
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            UV: 
-            <span id="leancloud-site-uv"></span>
-            
-          </span>
-      
-
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
 
-
-  <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -651,15 +649,27 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
 
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
-  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -669,73 +679,90 @@ q<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><s
 
 
 
-  
-    
-  
-
-
 
   
-    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
-  
-  
-    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
-  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-        typing(title);
-      
-    })(window, document);
-  </script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

@@ -18,53 +18,40 @@
   <meta name="author" content="Yaoxing Shan">
   <meta name="keywords" content="Yaoxing Shan,dsyx">
   
-    <meta name="description" content="Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： void">
+    <meta name="description" content="Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： 1234">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows via C&#x2F;C++, 5th Edition - Jobs">
 <meta property="og:url" content="https://dsyx.github.io/2022/02/14/windows-via-c-cpp-5th-jobs/index.html">
 <meta property="og:site_name" content="Yaoxing Shan">
-<meta property="og:description" content="Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： void">
+<meta property="og:description" content="Microsoft Windows 提供了作业内核对象（Job Kernel Object），允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。 如下 StartRestrictedProcess 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中： 1234">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-14T01:24:02.000Z">
 <meta property="article:modified_time" content="2022-05-25T06:08:03.635Z">
 <meta property="article:author" content="Yaoxing Shan">
-<meta property="article:tag" content="Windows">
 <meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta property="article:tag" content="Windows">
 <meta name="twitter:card" content="summary_large_image">
+  
   
   
   <title>Windows via C/C++, 5th Edition - Jobs - Yaoxing Shan</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
-  
-    
-    
-      
-      
-        
-          
-        
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
-      
-      
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
-      
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
@@ -73,25 +60,59 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
 
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-<link rel="stylesheet" href="/css/fluid_custom.css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 6.0.0"></head>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
       <strong>Yaoxing Shan</strong>
@@ -173,6 +194,7 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -185,65 +207,77 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Jobs">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-02-14 09:24" pubdate>
-        2022/02/14
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      5.2k 字
-    </span>
   
 
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      44 分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
-      </span>
-    
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Windows via C/C++, 5th Edition - Jobs"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-14 09:24" pubdate>
+          2022/02/14
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
@@ -252,105 +286,24 @@
 
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
     <div class="col-lg-8 nopadding-x-md">
       <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
+        <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Windows via C/C++, 5th Edition - Jobs</h1>
             
-            <div class="markdown-body">
-              <p>Microsoft Windows 提供了<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/procthread/job-objects">作业内核对象（Job Kernel Object）</a>，允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。</p>
+            
+              <div class="markdown-body">
+                
+                <p>Microsoft Windows 提供了<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/procthread/job-objects">作业内核对象（Job Kernel Object）</a>，允许将进程组合在一起，并创建一个“沙盒（sandbox）”来限制进程可以执行的操作。最好将作业对象视为进程的容器。创建包含单个进程的作业也是很有用的，因为您可以对该进程施加各种限制。</p>
 <p>如下 <code>StartRestrictedProcess</code> 函数将一个进程放置到一个限制进程执行某些操作的能力的作业中：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> <span class="token function">StartRestrictedProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// Check if we are not already associated with a job.</span>
-    <span class="token comment">// If this is the case, there is no way to switch to another job.</span>
-    BOOL bInJob <span class="token operator">=</span> FALSE<span class="token punctuation">;</span>
-    <span class="token function">IsProcessInJob</span><span class="token punctuation">(</span><span class="token function">GetCurrentProcess</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>bInJob<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>bInJob<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token function">MessageBox</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Process already in a job"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">,</span> MB_ICONINFORMATION <span class="token operator">|</span> MB_OK<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token comment">// Create a job kernel object.</span>
-    HANDLE hjob <span class="token operator">=</span> <span class="token function">CreateJobObject</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Wintellect_RestrictedProcessJob"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Place some restrictions on processes in the job.</span>
-
-    <span class="token comment">// First, set some basic restrictions.</span>
-    JOBOBJECT_BASIC_LIMIT_INFORMATION jobli <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// The process always runs in the idle priority class.</span>
-    jobli<span class="token punctuation">.</span>PriorityClass <span class="token operator">=</span> IDLE_PRIORITY_CLASS<span class="token punctuation">;</span>
-
-    <span class="token comment">// The job cannot use more than 1 second of CPU time.</span>
-    jobli<span class="token punctuation">.</span>PerJobUserTimeLimit<span class="token punctuation">.</span>QuadPart <span class="token operator">=</span> <span class="token number">10000</span><span class="token punctuation">;</span> <span class="token comment">// 1 sec in 100-ns intervals</span>
-
-    <span class="token comment">// These are the only 2 restrictions I want placed on the job (process).</span>
-    jobli<span class="token punctuation">.</span>LimitFlags <span class="token operator">=</span> JOB_OBJECT_LIMIT_PRIORITY_CLASS <span class="token operator">|</span> JOB_OBJECT_LIMIT_JOB_TIME<span class="token punctuation">;</span>
-    <span class="token function">SetInformationJobObject</span><span class="token punctuation">(</span>hjob<span class="token punctuation">,</span> JobObjectBasicLimitInformation<span class="token punctuation">,</span> <span class="token operator">&amp;</span>jobli<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>jobli<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Second, set some UI restrictions.</span>
-    JOBOBJECT_BASIC_UI_RESTRICTIONS jobuir<span class="token punctuation">;</span>
-    jobuir<span class="token punctuation">.</span>UIRestrictionsClass <span class="token operator">=</span> JOB_OBJECT_UILIMIT_NONE<span class="token punctuation">;</span> <span class="token comment">// A fancy zero</span>
-
-    <span class="token comment">// The process can't log off the system.</span>
-    jobuir<span class="token punctuation">.</span>UIRestrictionsClass <span class="token operator">|=</span> JOB_OBJECT_UILIMIT_EXITWINDOWS<span class="token punctuation">;</span>
-
-    <span class="token comment">// The process can't access USER objects (such as other windows) in the system.</span>
-    jobuir<span class="token punctuation">.</span>UIRestrictionsClass <span class="token operator">|=</span> JOB_OBJECT_UILIMIT_HANDLES<span class="token punctuation">;</span>
-    
-    <span class="token function">SetInformationJobObject</span><span class="token punctuation">(</span>hjob<span class="token punctuation">,</span> JobObjectBasicUIRestrictions<span class="token punctuation">,</span> <span class="token operator">&amp;</span>jobuir<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>jobuir<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Spawn the process that is to be in the job.</span>
-    <span class="token comment">// Note: You must first spawn the process and then place the process in the job.</span>
-    <span class="token comment">//       This means that the process' thread must be initially suspended so that</span>
-    <span class="token comment">//       it can't execute any code outside of the job's restrictions.</span>
-    STARTUPINFO si <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>si<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
-    PROCESS_INFORMATION pi<span class="token punctuation">;</span>
-    TCHAR szCmdLine<span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token function">_tcscpy_s</span><span class="token punctuation">(</span>szCmdLine<span class="token punctuation">,</span> <span class="token function">_countof</span><span class="token punctuation">(</span>szCmdLine<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"CMD"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    BOOL bResult <span class="token operator">=</span> <span class="token function">CreateProcess</span><span class="token punctuation">(</span><span class="token constant">NULL</span><span class="token punctuation">,</span> szCmdLine<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> CREATE_SUSPENDED <span class="token operator">|</span> CREATE_NEW_CONSOLE<span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token constant">NULL</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>si<span class="token punctuation">,</span> <span class="token operator">&amp;</span>pi<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Place the process in the job.</span>
-    <span class="token comment">// Note: If this process spawns any children, the children are</span>
-    <span class="token comment">//       automatically part of the same job.</span>
-    <span class="token function">AssignProcessToJobObject</span><span class="token punctuation">(</span>hjob<span class="token punctuation">,</span> pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Now we can allow the child process' thread to execute code.</span>
-    <span class="token function">ResumeThread</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hThread<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hThread<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Wait for the process to terminate or</span>
-    <span class="token comment">// for all the job's allotted CPU time to be used.</span>
-    HANDLE h<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    h<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">;</span>
-    h<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> hjob<span class="token punctuation">;</span>
-    DWORD dw <span class="token operator">=</span> <span class="token function">WaitForMultipleObjects</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> h<span class="token punctuation">,</span> FALSE<span class="token punctuation">,</span> INFINITE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">switch</span> <span class="token punctuation">(</span>dw <span class="token operator">-</span> WAIT_OBJECT_0<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
-        <span class="token comment">// The process has terminated...</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
-        <span class="token comment">// All of the job's allotted CPU time was used...</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    FILETIME CreationTime<span class="token punctuation">;</span>
-    FILETIME ExitTime<span class="token punctuation">;</span>
-    FILETIME KernelTime<span class="token punctuation">;</span>
-    FILETIME UserTime<span class="token punctuation">;</span>
-    TCHAR szInfo<span class="token punctuation">[</span>MAX_PATH<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token function">GetProcessTimes</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">,</span> <span class="token operator">&amp;</span>CreationTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>ExitTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>KernelTime<span class="token punctuation">,</span> <span class="token operator">&amp;</span>UserTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">StringCchPrintf</span><span class="token punctuation">(</span>szInfo<span class="token punctuation">,</span> <span class="token function">_countof</span><span class="token punctuation">(</span>szInfo<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Kernel = %u | User = %u\n"</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    KernelTime<span class="token punctuation">.</span>dwLowDateTime <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">,</span> UserTime<span class="token punctuation">.</span>dwLowDateTime <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">MessageBox</span><span class="token punctuation">(</span><span class="token function">GetActiveWindow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> szInfo<span class="token punctuation">,</span> <span class="token function">TEXT</span><span class="token punctuation">(</span><span class="token string">"Restricted Process times"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> MB_ICONINFORMATION <span class="token operator">|</span> MB_OK<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Clean up properly.</span>
-    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>pi<span class="token punctuation">.</span>hProcess<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">CloseHandle</span><span class="token punctuation">(</span>hjob<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">StartRestrictedProcess</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// Check if we are not already associated with a job.</span><br>    <span class="hljs-comment">// If this is the case, there is no way to switch to another job.</span><br>    BOOL bInJob = FALSE;<br>    <span class="hljs-built_in">IsProcessInJob</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), <span class="hljs-literal">NULL</span>, &amp;bInJob);<br>    <span class="hljs-keyword">if</span> (bInJob) &#123;<br>        <span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;Process already in a job&quot;</span>), <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;&quot;</span>), MB_ICONINFORMATION | MB_OK);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// Create a job kernel object.</span><br>    HANDLE hjob = <span class="hljs-built_in">CreateJobObject</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;Wintellect_RestrictedProcessJob&quot;</span>));<br><br>    <span class="hljs-comment">// Place some restrictions on processes in the job.</span><br><br>    <span class="hljs-comment">// First, set some basic restrictions.</span><br>    JOBOBJECT_BASIC_LIMIT_INFORMATION jobli = &#123; <span class="hljs-number">0</span> &#125;;<br><br>    <span class="hljs-comment">// The process always runs in the idle priority class.</span><br>    jobli.PriorityClass = IDLE_PRIORITY_CLASS;<br><br>    <span class="hljs-comment">// The job cannot use more than 1 second of CPU time.</span><br>    jobli.PerJobUserTimeLimit.QuadPart = <span class="hljs-number">10000</span>; <span class="hljs-comment">// 1 sec in 100-ns intervals</span><br><br>    <span class="hljs-comment">// These are the only 2 restrictions I want placed on the job (process).</span><br>    jobli.LimitFlags = JOB_OBJECT_LIMIT_PRIORITY_CLASS | JOB_OBJECT_LIMIT_JOB_TIME;<br>    <span class="hljs-built_in">SetInformationJobObject</span>(hjob, JobObjectBasicLimitInformation, &amp;jobli, <span class="hljs-built_in">sizeof</span>(jobli));<br><br>    <span class="hljs-comment">// Second, set some UI restrictions.</span><br>    JOBOBJECT_BASIC_UI_RESTRICTIONS jobuir;<br>    jobuir.UIRestrictionsClass = JOB_OBJECT_UILIMIT_NONE; <span class="hljs-comment">// A fancy zero</span><br><br>    <span class="hljs-comment">// The process can&#x27;t log off the system.</span><br>    jobuir.UIRestrictionsClass |= JOB_OBJECT_UILIMIT_EXITWINDOWS;<br><br>    <span class="hljs-comment">// The process can&#x27;t access USER objects (such as other windows) in the system.</span><br>    jobuir.UIRestrictionsClass |= JOB_OBJECT_UILIMIT_HANDLES;<br>    <br>    <span class="hljs-built_in">SetInformationJobObject</span>(hjob, JobObjectBasicUIRestrictions, &amp;jobuir, <span class="hljs-built_in">sizeof</span>(jobuir));<br><br>    <span class="hljs-comment">// Spawn the process that is to be in the job.</span><br>    <span class="hljs-comment">// Note: You must first spawn the process and then place the process in the job.</span><br>    <span class="hljs-comment">//       This means that the process&#x27; thread must be initially suspended so that</span><br>    <span class="hljs-comment">//       it can&#x27;t execute any code outside of the job&#x27;s restrictions.</span><br>    STARTUPINFO si = &#123; <span class="hljs-built_in">sizeof</span>(si) &#125;;<br>    PROCESS_INFORMATION pi;<br>    TCHAR szCmdLine[<span class="hljs-number">8</span>];<br>    _tcscpy_s(szCmdLine, _countof(szCmdLine), <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;CMD&quot;</span>));<br>    BOOL bResult = <span class="hljs-built_in">CreateProcess</span>(<span class="hljs-literal">NULL</span>, szCmdLine, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, FALSE, CREATE_SUSPENDED | CREATE_NEW_CONSOLE, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, &amp;si, &amp;pi);<br><br>    <span class="hljs-comment">// Place the process in the job.</span><br>    <span class="hljs-comment">// Note: If this process spawns any children, the children are</span><br>    <span class="hljs-comment">//       automatically part of the same job.</span><br>    <span class="hljs-built_in">AssignProcessToJobObject</span>(hjob, pi.hProcess);<br><br>    <span class="hljs-comment">// Now we can allow the child process&#x27; thread to execute code.</span><br>    <span class="hljs-built_in">ResumeThread</span>(pi.hThread);<br>    <span class="hljs-built_in">CloseHandle</span>(pi.hThread);<br><br>    <span class="hljs-comment">// Wait for the process to terminate or</span><br>    <span class="hljs-comment">// for all the job&#x27;s allotted CPU time to be used.</span><br>    HANDLE h[<span class="hljs-number">2</span>];<br>    h[<span class="hljs-number">0</span>] = pi.hProcess;<br>    h[<span class="hljs-number">1</span>] = hjob;<br>    DWORD dw = <span class="hljs-built_in">WaitForMultipleObjects</span>(<span class="hljs-number">2</span>, h, FALSE, INFINITE);<br>    <span class="hljs-keyword">switch</span> (dw - WAIT_OBJECT_0) &#123;<br>    <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:<br>        <span class="hljs-comment">// The process has terminated...</span><br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:<br>        <span class="hljs-comment">// All of the job&#x27;s allotted CPU time was used...</span><br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br><br>    FILETIME CreationTime;<br>    FILETIME ExitTime;<br>    FILETIME KernelTime;<br>    FILETIME UserTime;<br>    TCHAR szInfo[MAX_PATH];<br>    <span class="hljs-built_in">GetProcessTimes</span>(pi.hProcess, &amp;CreationTime, &amp;ExitTime, &amp;KernelTime, &amp;UserTime);<br>    <span class="hljs-built_in">StringCchPrintf</span>(szInfo, _countof(szInfo), <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;Kernel = %u | User = %u\n&quot;</span>),<br>    KernelTime.dwLowDateTime / <span class="hljs-number">10000</span>, UserTime.dwLowDateTime / <span class="hljs-number">10000</span>);<br>    <span class="hljs-built_in">MessageBox</span>(<span class="hljs-built_in">GetActiveWindow</span>(), szInfo, <span class="hljs-built_in">TEXT</span>(<span class="hljs-string">&quot;Restricted Process times&quot;</span>), MB_ICONINFORMATION | MB_OK);<br><br>    <span class="hljs-comment">// Clean up properly.</span><br>    <span class="hljs-built_in">CloseHandle</span>(pi.hProcess);<br>    <span class="hljs-built_in">CloseHandle</span>(hjob);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>注：默认情况下，当您通过 Windows 资源管理器（Windows Explorer）启动应用程序时，该进程会自动关联到一个专用作业，其名称以“PCA”字符串为前缀。当作业中的进程退出时，资源管理器可能会收到通知。因此，当由 Windows 资源管理器启动的传统应用程序出现故障时，将触发程序兼容性助手（Program Compatibility Assistant）。从 Shell 中启动应用程序则不会发生这种作业关联。</p>
@@ -367,58 +320,104 @@
 <h2 id="终止作业中的所有进程"><a href="#终止作业中的所有进程" class="headerlink" title="终止作业中的所有进程"></a>终止作业中的所有进程</h2><p>要想终止作业中的所有进程，只需调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-terminatejobobject"><code>TerminateJobObject</code></a>。这类似于为作业中的每个进程调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess"><code>TerminateProcess</code></a>，并将其退出代码设置为 <code>uExitCode</code>。</p>
 <h2 id="作业通知"><a href="#作业通知" class="headerlink" title="作业通知"></a>作业通知</h2><p>通知允许您获知与作业相关的事件。例如，作业中的所有进程何时终止了，或者所有分配的 CPU 时间是否已到期了？作业中何时产生了新进程，或者作业中的进程何时终止了？</p>
 <p>如果您关心的是所有分配的 CPU 时间是否已到期，则可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject"><code>WaitForSingleObject</code></a> 或类似函数来捕获此事件。这是因为一旦用完所有分配的 CPU 时间，Windows 就会终止作业中的所有进程并将作业对象置于已示意（signaled）。随后，您可以通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-setinformationjobobject"><code>SetInformationJobObject</code></a> 并给予作业更多的 CPU 时间来将作业对象重置回未示意（nonsignaled）状态。</p>
-<p>如果需要获得更高级的通知信息（如进程的创建/终止），那么必须创建 I/O 完成端口内核对象（I/O Completion Port Kernel Object），并将作业对象或对象与其关联。然后，必须有一个或多个线程在完成端口上等待作业通知到达，以便可以对其进行处理。</p>
-<p>创建 I/O 完成端口后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-setinformationjobobject"><code>SetInformationJobObject</code></a> 将作业与其关联，如下所示：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">JOBOBJECT_ASSOCIATE_COMPLETION_PORT joacp<span class="token punctuation">;</span>
-joacp<span class="token punctuation">.</span>CompletionKey <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// Any value to uniquely identify this job</span>
-joacp<span class="token punctuation">.</span>CompletionPort <span class="token operator">=</span> hIOCP<span class="token punctuation">;</span> <span class="token comment">// Handle of completion port that receives notifications</span>
-<span class="token function">SetInformationJobObject</span><span class="token punctuation">(</span>hJob<span class="token punctuation">,</span> JobObjectAssociateCompletionPortInformation<span class="token punctuation">,</span> <span class="token operator">&amp;</span>joacp<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>jaocp<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>如果需要获得更高级的通知信息（如进程的创建&#x2F;终止），那么必须创建 I&#x2F;O 完成端口内核对象（I&#x2F;O Completion Port Kernel Object），并将作业对象或对象与其关联。然后，必须有一个或多个线程在完成端口上等待作业通知到达，以便可以对其进行处理。</p>
+<p>创建 I&#x2F;O 完成端口后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-setinformationjobobject"><code>SetInformationJobObject</code></a> 将作业与其关联，如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp">JOBOBJECT_ASSOCIATE_COMPLETION_PORT joacp;<br>joacp.CompletionKey = <span class="hljs-number">1</span>; <span class="hljs-comment">// Any value to uniquely identify this job</span><br>joacp.CompletionPort = hIOCP; <span class="hljs-comment">// Handle of completion port that receives notifications</span><br><span class="hljs-built_in">SetInformationJobObject</span>(hJob, JobObjectAssociateCompletionPortInformation, &amp;joacp, <span class="hljs-built_in">sizeof</span>(jaocp));<br></code></pre></td></tr></table></figure>
 
-<p>上述代码执行后，系统将监视作业，并在事件发生时将其发布到 I/O 完成端口。线程通常通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus"><code>GetQueuedCompletionStatus</code></a> 来监视 I/O 完成端口。</p>
+<p>上述代码执行后，系统将监视作业，并在事件发生时将其发布到 I&#x2F;O 完成端口。线程通常通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getqueuedcompletionstatus"><code>GetQueuedCompletionStatus</code></a> 来监视 I&#x2F;O 完成端口。</p>
 <p>最后需要注意的一点是：默认情况下，作业对象被配置为当作业分配的 CPU 时间到期时，作业的所有进程都将自动终止，并且不会发布 <code>JOB_OBJECT_MSG_END_OF_JOB_TIME</code> 通知。如果要防止作业对象终止进程，而只是通知您已超过时间，则必须执行如下代码：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Create a JOBOBJECT_END_OF_JOB_TIME_INFORMATION structure and initialize its only member.</span>
-JOBOBJECT_END_OF_JOB_TIME_INFORMATION joeojti<span class="token punctuation">;</span>
-joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="token operator">=</span> JOB_OBJECT_POST_AT_END_OF_JOB<span class="token punctuation">;</span>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// Create a JOBOBJECT_END_OF_JOB_TIME_INFORMATION structure and initialize its only member.</span><br>JOBOBJECT_END_OF_JOB_TIME_INFORMATION joeojti;<br>joeojti.EndOfJobTimeAction = JOB_OBJECT_POST_AT_END_OF_JOB;<br><br><span class="hljs-comment">// Tell the job object what we want it to do when the job time is exceeded.</span><br><span class="hljs-built_in">SetInformationJobObject</span>(hJob, JobObjectEndOfJobTimeInformation, &amp;joeojti, <span class="hljs-built_in">sizeof</span>(joeojti));<br></code></pre></td></tr></table></figure>
 
-<span class="token comment">// Tell the job object what we want it to do when the job time is exceeded.</span>
-<span class="token function">SetInformationJobObject</span><span class="token punctuation">(</span>hJob<span class="token punctuation">,</span> JobObjectEndOfJobTimeInformation<span class="token punctuation">,</span> <span class="token operator">&amp;</span>joeojti<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>joeojti<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
-
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
+      
+        <a href="/tags/Windows/">#Windows</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Windows via C/C++, 5th Edition - Jobs</div>
+      <div>https://dsyx.github.io/2022/02/14/windows-via-c-cpp-5th-jobs/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yaoxing Shan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
               
-              
-                <div class="post-prevnext">
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/02/14/windows-via-c-cpp-5th-thread-basics/">
+                      <a href="/2022/02/14/windows-via-c-cpp-5th-thread-basics/" title="Windows via C/C++, 5th Edition - Thread Basics">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Basics</span>
                         <span class="visible-mobile">上一篇</span>
@@ -428,7 +427,7 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/02/09/windows-via-c-cpp-5th-processes/">
+                      <a href="/2022/02/09/windows-via-c-cpp-5th-processes/" title="Windows via C/C++, 5th Edition - Processes">
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Processes</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -440,16 +439,12 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments" lazyload>
-                
-                  
-                
-                
+  <article id="comments" lazyload>
+    
   <div id="valine"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#valine', function() {
-      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.17/Valine.min.js', function() {
         var options = Object.assign(
           {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
           {
@@ -459,7 +454,9 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
         )
         new Valine(options);
         Fluid.utils.waitElementVisible('#valine .vcontent', () => {
-          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
         })
       });
     });
@@ -467,25 +464,57 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
   <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+  </article>
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
   <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
@@ -510,60 +539,62 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            PV: 
-            <span id="leancloud-site-pv"></span>
-            
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            UV: 
-            <span id="leancloud-site-uv"></span>
-            
-          </span>
-      
-
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
 
-
-  <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -574,15 +605,27 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
 
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
-  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -592,73 +635,90 @@ joeojti<span class="token punctuation">.</span>EndOfJobTimeAction <span class="t
 
 
 
-  
-    
-  
-
-
 
   
-    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
-  
-  
-    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
-  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-        typing(title);
-      
-    })(window, document);
-  </script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>

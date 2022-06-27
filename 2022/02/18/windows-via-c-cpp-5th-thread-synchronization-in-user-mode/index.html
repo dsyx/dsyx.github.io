@@ -28,43 +28,30 @@
 <meta property="article:published_time" content="2022-02-18T08:01:09.000Z">
 <meta property="article:modified_time" content="2022-05-25T06:08:03.640Z">
 <meta property="article:author" content="Yaoxing Shan">
-<meta property="article:tag" content="Windows">
 <meta property="article:tag" content="Windows via C&#x2F;C++">
+<meta property="article:tag" content="Windows">
 <meta name="twitter:card" content="summary_large_image">
+  
   
   
   <title>Windows via C/C++, 5th Edition - Thread Synchronization in User Mode - Yaoxing Shan</title>
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
-  
-    
-    
-      
-      
-        
-          
-        
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
-      
-      
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
-      
-    
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-  
-    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
-  
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
 
 
 
@@ -73,25 +60,59 @@
 
 <link  rel="stylesheet" href="/css/main.css" />
 
-<!-- 自定义样式保持在最底部 -->
 
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-<link rel="stylesheet" href="/css/fluid_custom.css">
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dsyx.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":false,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","app_key":"y5VyP3P3UkETrrcliQIjlozw","server_url":"https://gw7lvqiv.lc-cn-e1-shared.com","path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 6.0.0"></head>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
 
 
 <body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
       <strong>Yaoxing Shan</strong>
@@ -173,6 +194,7 @@
               &nbsp;<i class="iconfont icon-search"></i>&nbsp;
             </a>
           </li>
+          
         
         
           <li class="nav-item" id="color-toggle-btn">
@@ -185,65 +207,77 @@
   </div>
 </nav>
 
-    <div class="banner" id="banner" parallax=true
-         style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Windows via C/C++, 5th Edition - Thread Synchronization in User Mode">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-02-18 16:01" pubdate>
-        2022/02/18
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      6.2k 字
-    </span>
   
 
-  
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
-      
-      
-      52 分钟
-    </span>
-  
-
-  
-  
-    
-      <!-- LeanCloud 统计文章PV -->
-      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
-        <i class="iconfont icon-eye" aria-hidden="true"></i>
-        <span id="leancloud-page-views"></span> 次
-      </span>
-    
-  
-</div>
-
-            
-          </div>
-
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://i.postimg.cc/RhHdxGSr/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Windows via C/C++, 5th Edition - Thread Synchronization in User Mode"></span>
           
         </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-18 16:01" pubdate>
+          2022/02/18
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
       </div>
+
+      
     </div>
+  </div>
+</div>
+
+</div>
+
   </header>
 
   <main>
@@ -252,16 +286,22 @@
 
 <div class="container-fluid nopadding-x">
   <div class="row nomargin-x">
-    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
     <div class="col-lg-8 nopadding-x-md">
       <div class="container nopadding-x-md" id="board-ctn">
-        <div class="py-5" id="board">
+        <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Windows via C/C++, 5th Edition - Thread Synchronization in User Mode</h1>
             
-            <div class="markdown-body">
-              <p>线程需要如下两种情况下进行同步：</p>
+            
+              <div class="markdown-body">
+                
+                <p>线程需要如下两种情况下进行同步：</p>
 <ul>
 <li>当有多个线程访问共享资源而不使资源被破坏时。</li>
 <li>当一个线程需要通知一个或多个其他线程特定任务已完成时。</li>
@@ -270,19 +310,7 @@
 <p>Windows 提供了<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-functions#interlocked-functions">互锁（Interlocked）函数族</a>，这些函数允许以原子操作方式对一个值进行操作，如 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchangeadd"><code>InterlockedExchangeAdd</code></a> 函数。</p>
 <p>互锁函数执行速度是非常快的，通常执行只需要很少的（通常小于 50 个）CPU 周期，并且不会从用户模式切换到内核模式（通常需要超过 1000 个 CPU 周期）。</p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchange"><code>InterlockedExchange</code></a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchangepointer"><code>InterlockedExchangePointer</code></a> 以原子方式将第一个指针参数所指向位置的当前值替换为第二个参数的值，并返回第一个指针参数所指向位置的原始值。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchange"><code>InterlockedExchange</code></a> 在实现自旋锁（Spinlock）时非常有用：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Global variable indicating whether a shared resource is in use or not</span>
-BOOL g_fResourceInUse <span class="token operator">=</span> FALSE<span class="token punctuation">;</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token keyword">void</span> <span class="token function">Func1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// Wait to access the resource.</span>
-    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token function">InterlockedExchange</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_fResourceInUse<span class="token punctuation">,</span> TRUE<span class="token punctuation">)</span> <span class="token operator">==</span> TRUE<span class="token punctuation">)</span>
-        <span class="token function">Sleep</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// Access the resource.</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-
-    <span class="token comment">// We no longer need to access the resource.</span>
-    <span class="token function">InterlockedExchange</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_fResourceInUse<span class="token punctuation">,</span> FALSE<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// Global variable indicating whether a shared resource is in use or not</span><br>BOOL g_fResourceInUse = FALSE; ...<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Func1</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">// Wait to access the resource.</span><br>    <span class="hljs-keyword">while</span> (<span class="hljs-built_in">InterlockedExchange</span>(&amp;g_fResourceInUse, TRUE) == TRUE)<br>        <span class="hljs-built_in">Sleep</span>(<span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// Access the resource.</span><br>    ...<br><br>    <span class="hljs-comment">// We no longer need to access the resource.</span><br>    <span class="hljs-built_in">InterlockedExchange</span>(&amp;g_fResourceInUse, FALSE);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><code>while</code> 循环反复旋转，将 <code>g_fResourceInUse</code> 中的值更改为 <code>TRUE</code>，并检查其原先的值是否为 <code>TRUE</code>。如果该值为 <code>FALSE</code>，则表示资源不是“使用中”，但调用线程只是将其设置为“使用中”并退出循环；如果该值为 <code>TRUE</code>，则表示资源正由另一个线程“使用中”，并且 <code>while</code> 循环继续旋转。</p>
 <p>如果另一个线程执行类似的代码，它将在其 <code>while</code> 循环中旋转，直到 <code>g_fResourceInUse</code> 变回 <code>FALSE</code>。函数末尾调用了 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedexchange"><code>InterlockedExchange</code></a> 以将 <code>g_fResourceInUse</code> 设置回 <code>FALSE</code>。</p>
@@ -302,26 +330,10 @@ BOOL g_fResourceInUse <span class="token operator">=</span> FALSE<span class="to
 <p>这种情况将是灾难性的。当然，芯片设计人员很清楚这个问题，并在设计 CPU 时处理这个问题。具体而言，当 CPU 更改缓存行中的字节时，计算机中的其他 CPU 会意识到这一点，并且其缓存行将失效。因此，在刚刚展示的示例中，当 CPU1 更改字节的值时，CPU2 的缓存将失效。在步骤 4 中，CPU1 必须将其缓存刷新到 RAM，而 CPU2 必须再次访问内存以重新填充其缓存行。缓存行可以帮助提高性能，但它们也可能对多处理器计算机造成不利影响。</p>
 <p>这一切意味着，您应该将应用程序的数据分组到缓存行中（大小块和缓存行边界）。目的是确保不同的 CPU 访问由至少一个缓存行边界分隔的不同的内存地址。此外，您应该将只读数据（或不经常读取的数据）与读写数据分开。并且，您应该将大概率会同时访问的数据片段组合在一起。</p>
 <p>下面是一个设计不佳的数据结构示例：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">struct</span> <span class="token class-name">CUSTINFO</span> <span class="token punctuation">&#123;</span>
-    DWORD dwCustomerID<span class="token punctuation">;</span>       <span class="token comment">// Mostly read-only</span>
-    <span class="token keyword">int</span> nBalanceDue<span class="token punctuation">;</span>          <span class="token comment">// Read-write</span>
-    <span class="token keyword">wchar_t</span> szName<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span>      <span class="token comment">// Mostly read-only</span>
-    FILETIME ftLastOrderDate<span class="token punctuation">;</span> <span class="token comment">// Read-write</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">CUSTINFO</span> &#123;<br>    DWORD dwCustomerID;       <span class="hljs-comment">// Mostly read-only</span><br>    <span class="hljs-type">int</span> nBalanceDue;          <span class="hljs-comment">// Read-write</span><br>    <span class="hljs-type">wchar_t</span> szName[<span class="hljs-number">100</span>];      <span class="hljs-comment">// Mostly read-only</span><br>    FILETIME ftLastOrderDate; <span class="hljs-comment">// Read-write</span><br>&#125;;<br></code></pre></td></tr></table></figure>
 
-<p>确定 CPU 的缓存行大小的最简单方法是调用 Win32 的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformation"><code>GetLogicalProcessorInformation</code></a> 函数。此函数返回 <code>SYSTEM_LOGICAL_PROCESSOR_INFORMATION</code> 结构的数组。您可以检查结构的 <code>Cache</code> 字段，该字段引用了一个 <code>CACHE_DESCRIPTOR</code> 结构，其中包含指示 CPU 缓存行大小的 <code>LineSize</code> 字段。获得此信息后，可以使用 C/C++ 编译器的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/cpp/align-cpp"><code>__declspec(align(#))</code></a> 指令来控制字段对齐。以下是此数据结构的改进版本：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">CACHE_ALIGN</span> <span class="token expression"><span class="token number">64</span></span></span>
-
-<span class="token comment">// Force each structure to be in a different cache line.</span>
-<span class="token keyword">struct</span> <span class="token class-name">__declspec</span><span class="token punctuation">(</span><span class="token function">align</span><span class="token punctuation">(</span>CACHE_ALIGN<span class="token punctuation">)</span><span class="token punctuation">)</span> CUSTINFO <span class="token punctuation">&#123;</span>
-    DWORD dwCustomerID<span class="token punctuation">;</span>  <span class="token comment">// Mostly read-only</span>
-    <span class="token keyword">wchar_t</span> szName<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// Mostly read-only</span>
-
-    <span class="token comment">// Force the following members to be in a different cache line.</span>
-    <span class="token function">__declspec</span><span class="token punctuation">(</span><span class="token function">align</span><span class="token punctuation">(</span>CACHE_ALIGN<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">int</span> nBalanceDue<span class="token punctuation">;</span>          <span class="token comment">// Read-write</span>
-    FILETIME ftLastOrderDate<span class="token punctuation">;</span> <span class="token comment">// Read-write</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<p>确定 CPU 的缓存行大小的最简单方法是调用 Win32 的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlogicalprocessorinformation"><code>GetLogicalProcessorInformation</code></a> 函数。此函数返回 <code>SYSTEM_LOGICAL_PROCESSOR_INFORMATION</code> 结构的数组。您可以检查结构的 <code>Cache</code> 字段，该字段引用了一个 <code>CACHE_DESCRIPTOR</code> 结构，其中包含指示 CPU 缓存行大小的 <code>LineSize</code> 字段。获得此信息后，可以使用 C&#x2F;C++ 编译器的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/cpp/align-cpp"><code>__declspec(align(#))</code></a> 指令来控制字段对齐。以下是此数据结构的改进版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> CACHE_ALIGN 64</span><br><br><span class="hljs-comment">// Force each structure to be in a different cache line.</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">__declspec</span>(<span class="hljs-built_in">align</span>(CACHE_ALIGN)) CUSTINFO &#123;<br>    DWORD dwCustomerID;  <span class="hljs-comment">// Mostly read-only</span><br>    <span class="hljs-type">wchar_t</span> szName[<span class="hljs-number">100</span>]; <span class="hljs-comment">// Mostly read-only</span><br><br>    <span class="hljs-comment">// Force the following members to be in a different cache line.</span><br>    __declspec(<span class="hljs-built_in">align</span>(CACHE_ALIGN))<br>    <span class="hljs-type">int</span> nBalanceDue;          <span class="hljs-comment">// Read-write</span><br>    FILETIME ftLastOrderDate; <span class="hljs-comment">// Read-write</span><br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <blockquote>
 <p>注：最好始终由单个线程访问数据（函数参数和局部变量是确保这一点的最简单方法），或者始终由单个 CPU 访问数据（使用线程亲和性）。这样的话，可以完全避免缓存行问题。</p>
@@ -329,24 +341,7 @@ BOOL g_fResourceInUse <span class="token operator">=</span> FALSE<span class="to
 <h2 id="高级线程同步"><a href="#高级线程同步" class="headerlink" title="高级线程同步"></a>高级线程同步</h2><p>当线程想要访问共享资源或收到某些“特殊事件”的通知时，该线程必须调用操作系统函数，并向其传递参数以指示线程正在等待什么。如果操作系统检测到资源可用或发生了特殊事件，则该函数将返回，并且线程保持可调度状态。如果资源不可用或特殊事件尚未发生，系统会将线程置于等待状态，从而使线程不可调度，这可以防止线程浪费任何 CPU 时间。当线程正在等待时，系统将为线程充当代理。系统会记住线程想要什么，并在资源变为可用时（线程的执行与特殊事件同步）自动地使线程退出等待状态。</p>
 <p>事实上，大多数线程几乎总是处于等待状态。当系统检测到所有线程处于等待状态几分钟后，系统的电源管理就会开始起效。</p>
 <h3 id="要避免的技术"><a href="#要避免的技术" class="headerlink" title="要避免的技术"></a>要避免的技术</h3><p>如果没有同步对象并且操作系统没有监视特殊事件的能力，线程将被迫使用如下的技术将自己与特殊事件同步。然而，如果操作系统具有对线程同步的内置支持，则切勿使用此技术：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">volatile</span> BOOL g_fFinishedCalculation <span class="token operator">=</span> FALSE<span class="token punctuation">;</span>
-
-<span class="token keyword">int</span> WINAPI <span class="token function">_tWinMain</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">CreateThread</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> RecalcFunc<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token comment">// Wait for the recalculation to complete.</span>
-    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>g_fFinishedCalculation<span class="token punctuation">)</span>
-        <span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span>
-
-DWORD WINAPI <span class="token function">RecalcFunc</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// Perform the recalculation.</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    g_fFinishedCalculation <span class="token operator">=</span> TRUE<span class="token punctuation">;</span>
-
-    <span class="token keyword">return</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">volatile</span> BOOL g_fFinishedCalculation = FALSE;<br><br><span class="hljs-type">int</span> WINAPI _tWinMain(...) &#123;<br>    <span class="hljs-built_in">CreateThread</span>(..., RecalcFunc, ...);<br>    ...<br>    <span class="hljs-comment">// Wait for the recalculation to complete.</span><br>    <span class="hljs-keyword">while</span> (!g_fFinishedCalculation)<br>        ;<br>    ...<br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">RecalcFunc</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    <span class="hljs-comment">// Perform the recalculation.</span><br>    ...<br>    g_fFinishedCalculation = TRUE;<br><br>    <span class="hljs-keyword">return</span>(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>在此技术中，一个线程通过连续轮询由多个线程共享或可访问的变量的状态，将自身与另一个线程中任务的完成同步。</p>
 <blockquote>
@@ -354,50 +349,11 @@ DWORD WINAPI <span class="token function">RecalcFunc</span><span class="token pu
 </blockquote>
 <h2 id="临界区段"><a href="#临界区段" class="headerlink" title="临界区段"></a>临界区段</h2><p>一个 <em>临界区段（Critical Section）</em> 是代码的一个小部分，其需要对某些共享资源进行独占访问。这是一种让数行代码“原子”操作资源的方法。“原子”意味着在一个线程离开临界区段之前，其他线程不能进入该临界区段。</p>
 <p>以下是一段有问题的代码，演示了不使用临界区段会发生什么情况：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">const</span> <span class="token keyword">int</span> COUNT <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-DWORD WINAPI <span class="token function">FirstThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> n <span class="token operator">&lt;=</span> COUNT<span class="token punctuation">;</span> n<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        g_nSum <span class="token operator">+=</span> n<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span><span class="token punctuation">(</span>g_nSum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-DWORD WINAPI <span class="token function">SecondThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> n <span class="token operator">&lt;=</span> COUNT<span class="token punctuation">;</span> n<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        g_nSum <span class="token operator">+=</span> n<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">return</span><span class="token punctuation">(</span>g_nSum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">const</span> <span class="hljs-type">int</span> COUNT = <span class="hljs-number">1000</span>;<br><span class="hljs-type">int</span> g_nSum = <span class="hljs-number">0</span>;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">FirstThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    g_nSum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">1</span>; n &lt;= COUNT; n++) &#123;<br>        g_nSum += n;<br>    &#125;<br>    <span class="hljs-keyword">return</span>(g_nSum);<br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">SecondThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    g_nSum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">1</span>; n &lt;= COUNT; n++) &#123;<br>        g_nSum += n;<br>    &#125;<br>    <span class="hljs-keyword">return</span>(g_nSum);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>由于两个线程都访问共享变量（<code>g_nSum</code>），因此如果两个线程同时执行（可能在不同的 CPU 上），则每个线程都会在另一个线程的后面修改 <code>g_nSum</code>，从而导致不可预知的结果。</p>
 <p>现在使用临界区段更正代码：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">const</span> <span class="token keyword">int</span> COUNT <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-CRITICAL_SECTION g_cs<span class="token punctuation">;</span>
-
-DWORD WINAPI <span class="token function">FirstThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">EnterCriticalSection</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_cs<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> n <span class="token operator">&lt;=</span> COUNT<span class="token punctuation">;</span> n<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        g_nSum <span class="token operator">+=</span> n<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token function">LeaveCriticalSection</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_cs<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span><span class="token punctuation">(</span>g_nSum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-
-DWORD WINAPI <span class="token function">SecondThread</span><span class="token punctuation">(</span>PVOID pvParam<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token function">EnterCriticalSection</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_cs<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    g_nSum <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> n <span class="token operator">&lt;=</span> COUNT<span class="token punctuation">;</span> n<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        g_nSum <span class="token operator">+=</span> n<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token function">LeaveCriticalSection</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>g_cs<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span><span class="token punctuation">(</span>g_nSum<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">const</span> <span class="hljs-type">int</span> COUNT = <span class="hljs-number">10</span>;<br><span class="hljs-type">int</span> g_nSum = <span class="hljs-number">0</span>;<br>CRITICAL_SECTION g_cs;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">FirstThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    <span class="hljs-built_in">EnterCriticalSection</span>(&amp;g_cs);<br>    g_nSum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">1</span>; n &lt;= COUNT; n++) &#123;<br>        g_nSum += n;<br>    &#125;<br>    <span class="hljs-built_in">LeaveCriticalSection</span>(&amp;g_cs);<br>    <span class="hljs-keyword">return</span>(g_nSum);<br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">SecondThread</span><span class="hljs-params">(PVOID pvParam)</span> </span>&#123;<br>    <span class="hljs-built_in">EnterCriticalSection</span>(&amp;g_cs);<br>    g_nSum = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> n = <span class="hljs-number">1</span>; n &lt;= COUNT; n++) &#123;<br>        g_nSum += n;<br>    &#125;<br>    <span class="hljs-built_in">LeaveCriticalSection</span>(&amp;g_cs);<br>    <span class="hljs-keyword">return</span>(g_nSum);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>首先分配了一个 <code>CRITICAL_SECTION</code> 数据结构 <code>g_cs</code>，然后将任何涉及共享资源（<code>g_nSum</code>）的代码包装在对 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entercriticalsection"><code>EnterCriticalSection</code></a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-leavecriticalsection"><code>LeaveCriticalSection</code></a> 的调用中。请注意，在对 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-entercriticalsection"><code>EnterCriticalSection</code></a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-leavecriticalsection"><code>LeaveCriticalSection</code></a> 的所有调用中都传递了 <code>g_cs</code> 的地址。</p>
 <h3 id="临界区段与自旋锁"><a href="#临界区段与自旋锁" class="headerlink" title="临界区段与自旋锁"></a>临界区段与自旋锁</h3><p>当一个线程尝试进入另一个线程拥有的临界区段时，调用线程将立即进入等待状态。这意味着线程必须从用户模式切换到内核模式（大约 1000 个 CPU 周期），这种切换非常昂贵。在多处理器计算机上，当前拥有资源的线程可能会在其他处理器上执行，并可能很快放弃对资源的控制。拥有该资源的线程可能会在其他线程完成到内核模式的切换之前释放资源。这种情况情况下会浪费大量 CPU 时间。</p>
@@ -408,47 +364,100 @@ DWORD WINAPI <span class="token function">SecondThread</span><span class="token 
 <p>要使用 SRWLock，首先需要分配一个 <code>SRWLOCK</code> 结构并使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-initializesrwlock"><code>InitializeSRWLock</code></a> 函数初始化它。</p>
 <p>初始化 SRWLock 后，写者可以尝试通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-acquiresrwlockexclusive"><code>AcquireSRWLockExclusive</code></a> 来获取对资源的独占访问权限。更新资源后，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-releasesrwlockexclusive"><code>ReleaseSRWLockExclusive</code></a> 来释放锁。</p>
 <p>对于读者，则使用以下两个函数来获取资源访问的权限：</p>
-<div class="code-wrapper"><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">VOID <span class="token function">AcquireSRWLockShared</span><span class="token punctuation">(</span>PSRWLOCK SRWLock<span class="token punctuation">)</span><span class="token punctuation">;</span>
-VOID <span class="token function">ReleaseSRWLockShared</span><span class="token punctuation">(</span>PSRWLOCK SRWLock<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">VOID <span class="hljs-title">AcquireSRWLockShared</span><span class="hljs-params">(PSRWLOCK SRWLock)</span></span>;<br><span class="hljs-function">VOID <span class="hljs-title">ReleaseSRWLockShared</span><span class="hljs-params">(PSRWLOCK SRWLock)</span></span>;<br></code></pre></td></tr></table></figure>
 
 <h2 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a>条件变量</h2><p>在一些需要同步的情景中，线程必须以原子方式释放资源上的锁并阻塞，直到满足某个条件为止。使用 <em>条件变量（Condition Variables）</em> 可以简化这些场景所需的代码，这可以通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleepconditionvariablecs"><code>SleepConditionVariableCS</code></a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleepconditionvariablesrw"><code>SleepConditionVariableSRW</code></a> 函数来实现。</p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/My-Notes/">My Notes</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows/">Windows</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Windows-via-C-C/">Windows via C/C++</a>
-                    
-                  </div>
                 
               </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/My-Notes/" class="category-chain-item">My Notes</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Windows-via-C-C/">#Windows via C/C++</a>
+      
+        <a href="/tags/Windows/">#Windows</a>
+      
+    </div>
+  
+</div>
+
+
               
-                <p class="note note-warning">
-                  
-                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
-                  
-                </p>
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Windows via C/C++, 5th Edition - Thread Synchronization in User Mode</div>
+      <div>https://dsyx.github.io/2022/02/18/windows-via-c-cpp-5th-thread-synchronization-in-user-mode/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Yaoxing Shan</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月18日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
               
-              
-                <div class="post-prevnext">
+                <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/02/23/windows-via-c-cpp-5th-thread-synchronization-with-kernel-objects/">
+                      <a href="/2022/02/23/windows-via-c-cpp-5th-thread-synchronization-with-kernel-objects/" title="Windows via C/C++, 5th Edition - Thread Synchronization with Kernel Objects">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Synchronization with Kernel Objects</span>
                         <span class="visible-mobile">上一篇</span>
@@ -458,7 +467,7 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/">
+                      <a href="/2022/02/17/windows-via-c-cpp-5th-thread-scheduling-priorities-and-affinities/" title="Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities">
                         <span class="hidden-mobile">Windows via C/C++, 5th Edition - Thread Scheduling, Priorities, and Affinities</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -470,16 +479,12 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
             </div>
 
             
-              <!-- Comments -->
-              <article class="comments" id="comments" lazyload>
-                
-                  
-                
-                
+  <article id="comments" lazyload>
+    
   <div id="valine"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#valine', function() {
-      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.4.17/Valine.min.js', function() {
         var options = Object.assign(
           {"appId":"Gw7lvQivNfUJCnidLKkgtOFm-9Nh9j0Va","appKey":"y5VyP3P3UkETrrcliQIjlozw","path":"window.location.pathname","placeholder":"说点什么 ......","avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":true,"recordIP":true,"serverURLs":"https://gw7lvqiv.lc-cn-e1-shared.com","emojiCDN":null,"emojiMaps":null,"enableQQ":true},
           {
@@ -489,7 +494,9 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
         )
         new Valine(options);
         Fluid.utils.waitElementVisible('#valine .vcontent', () => {
-          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
         })
       });
     });
@@ -497,25 +504,57 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
   <noscript>Please enable JavaScript to view the comments</noscript>
 
 
-              </article>
-            
+  </article>
+
+
           </article>
         </div>
       </div>
     </div>
-    
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
   <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div class="toc-body" id="toc-body"></div>
 </div>
 
-      </div>
-    
+
+
+  </aside>
+
+
+    </div>
   </div>
 </div>
 
-<!-- Custom -->
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
 
 
     
@@ -540,60 +579,62 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
     </div>
   </div>
 </div>
+
     
 
     
   </main>
 
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
+  <footer>
+    <div class="footer-inner">
   
-  <div class="statistics">
-    
-    
-
-    
-      
-        <!-- LeanCloud 统计PV -->
-        <span id="leancloud-site-pv-container" style="display: none">
-            PV: 
-            <span id="leancloud-site-pv"></span>
-            
-          </span>
-      
-      
-        <!-- LeanCloud 统计UV -->
-        <span id="leancloud-site-uv-container" style="display: none">
-            UV: 
-            <span id="leancloud-site-uv"></span>
-            
-          </span>
-      
-
-    
-  </div>
-
-
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
   
 
   
-</footer>
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
 
-
-  <!-- SCRIPTS -->
   
-  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
     NProgress.configure({"showSpinner":false,"trickleSpeed":100})
@@ -604,15 +645,27 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
   </script>
 
 
-<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
-<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
 
-<!-- Plugins -->
 
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
 
-  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -622,73 +675,90 @@ VOID <span class="token function">ReleaseSRWLockShared</span><span class="token 
 
 
 
-  
-    
-  
-
-
 
   
-    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
-  
-  
-    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
-  
-  
-    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
-  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
 
 
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
 
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script defer src="/js/leancloud.js" ></script>
 
-
-
-  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
-  <script>
-    (function (window, document) {
-      var typing = Fluid.plugins.typing;
-      var title = document.getElementById('subtitle').title;
-      
-        typing(title);
-      
-    })(window, document);
-  </script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
-
-
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-<!-- 主题的启动项 保持在最底部 -->
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
 <script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
 </body>
 </html>
