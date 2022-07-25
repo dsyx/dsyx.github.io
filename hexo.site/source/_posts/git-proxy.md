@@ -1,6 +1,7 @@
 ---
 title: 'Git 代理'
 date: 2021-03-17 20:42:39
+updated: 2022-07-25 16:35:00
 category: Git
 tags: 'Git'
 ---
@@ -43,30 +44,45 @@ git config --global --unset https.proxy
 
 利用 [OpenSSH](https://www.openssh.com/) 的 [ProxyCommand](https://man.openbsd.org/ssh_config#ProxyCommand) 特性，可以实现 ssh 传输的代理。
 
-默认情况下， ssh 会自己建立与目标机器的连接。如果启用了 ProxyCommand 特性，则 ProxyCommand 所指定的命令负责建立连接，ssh 会直接使用命令所建立的连接。
+默认情况下，ssh 会自己建立与目标机器的连接。如果启用了 ProxyCommand 特性，则 ProxyCommand 所指定的命令负责建立连接，ssh 会直接使用命令所建立的连接。
 
-通过 [netcat](https://en.wikipedia.org/wiki/Netcat) 可以建立连接以供 ssh 使用。
+通过 [netcat](https://en.wikipedia.org/wiki/Netcat) 或 [ssh-connect](https://github.com/gotoh/ssh-connect) 可以建立连接以供 ssh 使用。
 
-> 注意：大部分 Unix/Linux 系统都默认安装了 netcat，一般为 `nc` 命令；Windows 系统需要另行安装。
+> 注：
+> 大部分 Unix/Linux 都默认安装了 netcat，一般为 `nc` 命令，而 Windows 则需要另行安装。
+> 如果不想在 Windows 上安装 netcat，那么可以使用 Git-Bash 自带的 `connect.exe`（即 ssh-connect）来替代 netcat。
 
-修改 OpenSSH 的 `config` 文件（Unix/Linux/Git-Bash 中的 `~/.ssh/config` ），添加如下内容之一：
+修改 OpenSSH 的 `config` 文件（Unix/Linux/Git-Bash：`~/.ssh/config`；Windows：`%USERPROFILE%/.ssh/config`），添加如下内容之一：
 
-使用 http 代理：
-
-```
-Host github.com
-    HostName github.com
-    User git
-    ProxyCommand nc -v -x 127.0.0.1:1080 %h %p
-```
-
-或使用 socks5 代理：
-
-```
-Host github.com
-    HostName github.com
-    User git
-    ProxyCommand nc -v -x 127.0.0.1:1081 %h %p
-```
+* netcat
+  * 使用 http 代理：
+    ```txt
+    Host github.com
+        HostName github.com
+        User git
+        ProxyCommand nc -v -X connect -x 127.0.0.1:1080 %h %p
+    ```
+  * 使用 socks5 代理：
+    ```txt
+    Host github.com
+        HostName github.com
+        User git
+        ProxyCommand nc -v -x 127.0.0.1:1081 %h %p
+    ```
+* ssh-connect
+  * 使用 http 代理：
+    ```txt
+    Host github.com
+        HostName github.com
+        User git
+        ProxyCommand connect -H 127.0.0.1:1080 %h %p
+    ```
+  * 使用 socks5 代理：
+    ```txt
+    Host github.com
+        HostName github.com
+        User git
+        ProxyCommand connect -S 127.0.0.1:1081 %h %p
+    ```
 
 修改后保存即可。后续的 `git` 命令若使用 ssh 协议进行传输，则会利用此代理。
