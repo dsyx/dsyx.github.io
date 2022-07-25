@@ -18,24 +18,26 @@
   <meta name="author" content="Yaoxing Shan">
   <meta name="keywords" content="Yaoxing Shan,dsyx">
   
-    <meta name="description" content="在 Ubuntu 18.04 LTS 上编译 Qt 库时发生了错误，提示如下： 12&#x2F;usr&#x2F;bin&#x2F;ld: cannot find -lGLcollect2: error: ld returned 1 exit status  这是由于缺少了 OpenGL 库。Mesa 3D 是一个开源的 OpenGL 实现，可以通过安装它来解决问题。 在 Ubuntu 上可以执行以下命令来安装： 1sudo">
+    <meta name="description" content="Nordic Semiconductor 是一家总部位于挪威的无厂半导体公司，其专注于为物联网领域提供无线通信技术。截止到本文的编写日，Nordic 的物联网产品已经十分丰富，以下是一张从官网中截取的产品介绍图：  Nordic 提供了 nRF Connect SDK 以方便开发者在 Nordic 的 nRF 系列芯片上进行应用开发。  nRF Connect SDK 也托管在 GitHub 上：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="cannot find -lGL">
-<meta property="og:url" content="https://dsyx.github.io/2021/03/25/cannot-find-lgl/index.html">
+<meta property="og:title" content="Nordic IoT 开发：起点">
+<meta property="og:url" content="https://dsyx.github.io/2022/07/25/nordic-iot-dev-starting-point/index.html">
 <meta property="og:site_name" content="Yaoxing Shan">
-<meta property="og:description" content="在 Ubuntu 18.04 LTS 上编译 Qt 库时发生了错误，提示如下： 12&#x2F;usr&#x2F;bin&#x2F;ld: cannot find -lGLcollect2: error: ld returned 1 exit status  这是由于缺少了 OpenGL 库。Mesa 3D 是一个开源的 OpenGL 实现，可以通过安装它来解决问题。 在 Ubuntu 上可以执行以下命令来安装： 1sudo">
+<meta property="og:description" content="Nordic Semiconductor 是一家总部位于挪威的无厂半导体公司，其专注于为物联网领域提供无线通信技术。截止到本文的编写日，Nordic 的物联网产品已经十分丰富，以下是一张从官网中截取的产品介绍图：  Nordic 提供了 nRF Connect SDK 以方便开发者在 Nordic 的 nRF 系列芯片上进行应用开发。  nRF Connect SDK 也托管在 GitHub 上：">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-03-25T13:49:05.000Z">
-<meta property="article:modified_time" content="2022-05-25T06:08:03.630Z">
+<meta property="og:image" content="https://dsyx.github.io/images/nordic-iot-dev-starting-point/nordic-product-guide.png">
+<meta property="og:image" content="https://dsyx.github.io/images/nordic-iot-dev-starting-point/ncs-toolchain.svg">
+<meta property="article:published_time" content="2022-07-25T05:58:09.000Z">
+<meta property="article:modified_time" content="2022-07-25T08:19:51.111Z">
 <meta property="article:author" content="Yaoxing Shan">
-<meta property="article:tag" content="Qt5">
-<meta property="article:tag" content="ld">
-<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="nRF Connect SDK">
+<meta property="article:tag" content="Nordic Semiconductor">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dsyx.github.io/images/nordic-iot-dev-starting-point/nordic-product-guide.png">
   
   
   
-  <title>cannot find -lGL - Yaoxing Shan</title>
+  <title>Nordic IoT 开发：起点 - Yaoxing Shan</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +219,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="cannot find -lGL"></span>
+            <span id="subtitle" data-typed-text="Nordic IoT 开发：起点"></span>
           
         </div>
 
@@ -228,8 +230,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2021-03-25 21:49" pubdate>
-          2021/03/25
+        <time datetime="2022-07-25 13:58" pubdate>
+          2022/07/25
         </time>
       </span>
     
@@ -240,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          418 字
+          830 字
         
       </span>
     
@@ -251,7 +253,7 @@
         
         
         
-          4 分钟
+          7 分钟
         
       </span>
     
@@ -297,20 +299,40 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">cannot find -lGL</h1>
+            <h1 style="display: none">Nordic IoT 开发：起点</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在 Ubuntu 18.04 LTS 上编译 Qt 库时发生了错误，提示如下：</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/usr/</span>bin/ld: cannot find -lGL<br>collect2: error: ld returned <span class="hljs-number">1</span> <span class="hljs-keyword">exit</span> status<br></code></pre></td></tr></table></figure>
-
-<p>这是由于缺少了 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/OpenGL">OpenGL</a> 库。<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mesa_(computer_graphics)">Mesa 3D</a> 是一个开源的 OpenGL 实现，可以通过安装它来解决问题。</p>
-<p>在 Ubuntu 上可以执行以下命令来安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install libgl1-mesa-dev<br></code></pre></td></tr></table></figure>
-
-<p>通过 <code>locate</code> 命令，可以看到 GL 库已安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">locate libGL.so<br>/usr/lib/i386-linux-gnu/libGL.so<br>/usr/lib/i386-linux-gnu/libGL.so.1<br>/usr/lib/i386-linux-gnu/libGL.so.1.0.0<br>/usr/lib/x86_64-linux-gnu/libGL.so.1<br>/usr/lib/x86_64-linux-gnu/libGL.so.1.0.0<br></code></pre></td></tr></table></figure>
+                <p><a target="_blank" rel="noopener" href="https://www.nordicsemi.com/">Nordic Semiconductor</a> 是一家总部位于挪威的无厂半导体公司，其专注于为物联网领域提供无线通信技术。截止到本文的编写日，Nordic 的物联网产品已经十分丰富，以下是一张从官网中截取的产品介绍图：</p>
+<p><img src="/images/nordic-iot-dev-starting-point/nordic-product-guide.png" srcset="/img/loading.gif" lazyload alt="Nordic Product Guide"></p>
+<p>Nordic 提供了 <a target="_blank" rel="noopener" href="https://www.nordicsemi.com/Products/Development-software/nrf-connect-sdk">nRF Connect SDK</a> 以方便开发者在 Nordic 的 nRF 系列芯片上进行应用开发。</p>
+<blockquote>
+<p>nRF Connect SDK 也托管在 GitHub 上：<a target="_blank" rel="noopener" href="https://github.com/nrfconnect/sdk-nrf">https://github.com/nrfconnect/sdk-nrf</a>。</p>
+</blockquote>
+<p>nRF Connect SDK 包含了蜂窝式物联网（<a target="_blank" rel="noopener" href="https://www.gsma.com/iot/long-term-evolution-machine-type-communication-lte-mtc-cat-m1/">LTE-M</a> 和 <a target="_blank" rel="noopener" href="https://www.gsma.com/iot/narrow-band-internet-of-things-nb-iot/">NB-IoT</a>）、<a target="_blank" rel="noopener" href="https://www.bluetooth.com/learn-about-bluetooth/tech-overview/">Bluetooth Low Energy</a>、<a target="_blank" rel="noopener" href="https://www.threadgroup.org/">Thread</a>、<a target="_blank" rel="noopener" href="https://csa-iot.org/all-solutions/zigbee/">Zigbee</a> 和 <a target="_blank" rel="noopener" href="https://www.bluetooth.com/learn-about-bluetooth/recent-enhancements/mesh/">Bluetooth Mesh</a> 的示例和参考实现，以及 nRF 系列芯片的驱动实现。nRF Connect SDK 还包含了为资源受限的连接设备设计的 <a target="_blank" rel="noopener" href="https://zephyrproject.org/">Zephyr</a> 实时操作系统。</p>
+<p>nRF Connect SDK 由各种代码库组成，并使用 <a target="_blank" rel="noopener" href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/develop/west/index.html#west">West</a> 工具进行管理。在这些代码库中值得注意的是：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/nrfconnect/sdk-nrf">sdk-nrf</a> - 包含专门针对 nRF 系列芯片的应用程序、示例、库和驱动程序。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nrfconnect/sdk-nrfxlib">sdk-nrfxlib</a> - 包含二进制格式的闭源库和模块。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nrfconnect/sdk-zephyr">sdk-zephyr</a> - 包含 Zephyr 项目的一个分支，它提供了一个实时操作系统。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/nrfconnect/sdk-mcuboot">sdk-mcuboot</a> - 包含 MCUboot 项目的一个分支，它提供了一个安全的引导加载程序。</li>
+</ul>
+<p>nRF Connect SDK 使用了 Zephyr 项目的构建方法，下图展示了 nRF Connect SDK 的构建方法和使用的工具：</p>
+<p><img src="/images/nordic-iot-dev-starting-point/ncs-toolchain.svg" srcset="/img/loading.gif" lazyload alt="nRF Connect SDK tools and configuration methods"></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.zephyrproject.org/latest/build/kconfig/index.html">Kconfig</a> - 生成配置库和子系统的定义。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.zephyrproject.org/latest/build/dts/index.html">Devicetree</a> - 描述硬件。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.zephyrproject.org/latest/build/cmake/index.html">CMake</a> - 基于 <code>CMakeLists.txt</code> 文件生成构建文件。</li>
+<li><a target="_blank" rel="noopener" href="https://ninja-build.org/">Ninja</a> - 类似于 make，使用构建文件来构建程序。</li>
+<li><a target="_blank" rel="noopener" href="https://gcc.gnu.org/">GCC</a> - 创建可执行文件。</li>
+</ul>
+<p>nRF Connect SDK 提供两种安装方式：<a target="_blank" rel="noopener" href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/gs_installing.html">手动</a>和<a target="_blank" rel="noopener" href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/gs_assistant.html">自动</a>。除非你熟悉 nRF Connect SDK 所使用的工具链，否则更建议你使用自动安装。</p>
+<hr>
+<p>参考文档：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/index.html">Welcome to the nRF Connect SDK!</a></li>
+</ul>
 
                 
               </div>
@@ -329,7 +351,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Qt/" class="category-chain-item">Qt</a>
+  <a href="/categories/IoT/" class="category-chain-item">IoT</a>
   
   
 
@@ -344,11 +366,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Qt5/">#Qt5</a>
+        <a href="/tags/nRF-Connect-SDK/">#nRF Connect SDK</a>
       
-        <a href="/tags/ld/">#ld</a>
-      
-        <a href="/tags/Ubuntu/">#Ubuntu</a>
+        <a href="/tags/Nordic-Semiconductor/">#Nordic Semiconductor</a>
       
     </div>
   
@@ -360,8 +380,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>cannot find -lGL</div>
-      <div>https://dsyx.github.io/2021/03/25/cannot-find-lgl/</div>
+      <div>Nordic IoT 开发：起点</div>
+      <div>https://dsyx.github.io/2022/07/25/nordic-iot-dev-starting-point/</div>
     </div>
     <div class="license-meta">
       
@@ -373,7 +393,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2021年3月25日</div>
+          <div>2022年7月25日</div>
         </div>
       
       
@@ -403,18 +423,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/25/remove-unneeded-kernels-in-ubuntu/" title="Ubuntu 下移除不需要的内核">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Ubuntu 下移除不需要的内核</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/03/17/git-proxy/" title="Git 代理">
-                        <span class="hidden-mobile">Git 代理</span>
+                      <a href="/2022/07/13/devicetree-specification/" title="Devicetree Specification">
+                        <span class="hidden-mobile">Devicetree Specification</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
